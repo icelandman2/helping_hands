@@ -1,7 +1,17 @@
 # Helping Hands
 
 ## Synopsis
-Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing.
+Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing
+
+## Team Members
+
+Member | Photograph
+--- | ---
+Swetha Revanur | <img src="images/swetha.png" alt="Swetha Revanur" title="Swetha Revanur" width="150">
+Matt Linker | <img src="images/matt.jpg" alt="Matt Linker" title="Matt Linker" width="150">
+Gabriel Garza | <img src="images/gabriel.jpeg" alt="Gabriel Garza" title="Gabriel Garza" width="150">
+Andrew Narcomey | <img src="images/andrew.jpeg" alt="Andrew Narcomey" title="Andrew Narcomey" width="150">
+Christina Li | <img src="images/tina.jpg" alt="Christina Li" title="Christina Li" width="150">
 
 ## Profiles
 | Member        | Skills           | Personal Traits  | Desired Growth | Weaknesses 
