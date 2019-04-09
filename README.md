@@ -1,4 +1,4 @@
-# Team-5
+# Helping Hands
 
 ### Profiles
 | Member        | Skills           | Personal Traits  | Desired Growth | Weaknesses 
