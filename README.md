@@ -13,4 +13,4 @@ Helping Hands is an interactive app that makes learning sign language fun and ea
 | Christina Li | Python, C, robotics, mechanical design | cooperative, open minded, interdiscplinary | iterated development, ML, NLP, front end | ML, very goal-oriented
 
 ## Communication
-We communicate interally over text, and maintain documentation on Github and Google Documents. Individually, we can be reached at srevanur@stanford.edu, mslinker@stanford.edu, ggarza5@stanford.edu, aon1@stanford.edu, and cli7@stanford.edu.
+We communicate internally over text, and maintain documentation on Github and Google Documents. Individually, we can be reached at srevanur@stanford.edu, mslinker@stanford.edu, ggarza5@stanford.edu, aon1@stanford.edu, and cli7@stanford.edu.
