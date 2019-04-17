@@ -3,6 +3,8 @@ import { View, Text , Image, StyleSheet} from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
+import SwipeCards from './SwipeCards.js'
+
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -25,7 +27,7 @@ class HomeScreen extends React.Component {
           })}
         />
 
-
+        
       </View>
     );
   }
@@ -73,6 +75,7 @@ class LearnScreen extends React.Component {
       <View style={styles.container}>
         <Text>{type}</Text>
         <Text>{sectionName}</Text>
+        <SwipeCards style={{flex: 1}} />
       </View>
     );
   }
