@@ -10,16 +10,6 @@ import React, {Component} from 'react';
 import {Alert, Platform, StyleSheet, Text, View, Image, Button} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
-const MainNavigator = createStackNavigator({
-  Home: {screen: Homescreen},
-  Learn: {screen: LearnScreen},
-});
-
-const App = createAppContainer(MainNavigator);
-
-export default App;
-
-
 type Props = {};
 export default class App extends Component<Props> {
   _hellooo() {
