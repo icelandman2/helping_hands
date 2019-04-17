@@ -5,6 +5,9 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import SwipeCards from './SwipeCards.js'
 
+
+import * as Progress from 'react-native-progress';
+
 class HomeScreen extends React.Component {
   render() {
     return (
@@ -66,6 +69,29 @@ class MenuScreen extends React.Component {
 }
 
 class LearnScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {progress: 0,
+      indeterminate: true};
+  }
+
+  componentDidMount() {
+    this.animate();
+  }
+
+  animate() {
+    let progress = 0;
+    this.setState({ progress });
+    setTimeout(() => {
+      this.setState({ indeterminate: false });
+      setInterval(() => {
+        progress = parseFloat(global.curr_alphabet_cards)/parseFloat(global.total_alphabet_cards);
+        this.setState({ progress });
+      }, 500);
+    }, 1500);
+  }
+
   render() {
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'learn');
@@ -75,6 +101,7 @@ class LearnScreen extends React.Component {
       <View style={styles.container}>
         <Text>{type}</Text>
         <Text>{sectionName}</Text>
+        <Progress.Bar progress={parseFloat(global.curr_alphabet_cards)/parseFloat(global.total_alphabet_cards)} width={200} />
         <SwipeCards style={{flex: 1}} />
       </View>
     );

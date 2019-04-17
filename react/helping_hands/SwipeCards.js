@@ -2,9 +2,10 @@
 'use strict';
 
 import React, { Component } from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Alert} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
+
 
 import images from "./img"
 
@@ -26,7 +27,7 @@ class Card extends React.Component {
     return (
       <View style={styles.card}>
         <Image source={images[this.props.name]} />
-        <Text style={styles.text}>This is card {this.props.name}</Text>
+        <Text style={styles.text}>{this.props.name}</Text>
       </View>
     )
   }
@@ -36,11 +37,13 @@ class NoMoreCards extends Component {
   constructor(props) {
     super(props);
   }
-
+  // Alert.alert('no more cards!!!!');
   render() {
     return (
       <View>
         <Text style={styles.noMoreCardsText}>No more cards</Text>
+        <Text style={styles.noMoreCardsText}>Learned: {global.learned.toString()}</Text>
+        <Text style={styles.noMoreCardsText}>Not learned: {global.not_learned.toString()}</Text>
       </View>
     )
   }
@@ -50,6 +53,8 @@ class NoMoreCards extends Component {
 export default class extends React.Component {
   constructor(props) {
     super(props);
+    global.curr_alphabet_cards = 0;
+
     this.state = {
       cards: [
         {name: 'a'},
@@ -80,16 +85,38 @@ export default class extends React.Component {
         {name: 'z'},
       ]
     };
+    this.state.cards = this.shuffle(this.state.cards);
+  }
+
+  shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
   }
 
   handleYup (card) {
-    console.log(`Yup for ${card.text}`)
+    global.learned.push(card.name);
+    global.curr_alphabet_cards = global.curr_alphabet_cards+1;
   }
   handleNope (card) {
-    console.log(`Practice again for ${card.text}`)
+    global.not_learned.push(card.name);
+    global.curr_alphabet_cards = global.curr_alphabet_cards+1;
   }
   handleMaybe (card) {
-    console.log(`Maybe for ${card.text}`)
+    global.maybe_learned.push(card.name);
   }
   render() {
     // If you want a stack of cards instead of one-per-one view, activate stack mode
