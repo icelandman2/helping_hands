@@ -1,162 +1,110 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React, {Component} from 'react';
-import {Alert, Platform, StyleSheet, Text, View, Image, Button} from 'react-native';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
-
-const MainNavigator = createStackNavigator({
-  Home: {screen: Homescreen},
-  Learn: {screen: LearnScreen},
-});
-
-const App = createAppContainer(MainNavigator);
-
-export default App;
+import React from "react";
+import { View, Text , Image, StyleSheet} from "react-native";
+import { Button } from 'react-native-elements';
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
 class HomeScreen extends React.Component {
-  static navigationOptions = {title: 'Welcome'};
   render() {
-    const {navigate} = this.props.navigation;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text style={styles.bigBlue}>Hello world!</Text>
-        <Image source = {pic} style={{width: 193, height: 100}}/>
-        <Greeting flower='sunflower' />
-        <Greeting flower='daisy' />
-        
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={this._hellooo}
-            title="Press me!!"
-          />
-        </View>
-        <Blink text='Blinkkkkkk' />
-        
+      <View style={styles.container}>
+        <Image source={require('./img/HelpingHandsLogo.png')} 
+               style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
+        <Button
+          containerStyle={styles.button}
+          title="Learn"
+          onPress={() => this.props.navigation.push('Menu', {
+            type: 'learn',
+          })}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Test"
+          onPress={() => this.props.navigation.push('Menu', {
+            type: 'test',
+          })}
+        />
+
+
       </View>
-      // <Button title="Learn!"
-      //         onPress={()=> navigate('Learn', {name: 'Jane'})}/>
+    );
+  }
+}
+
+class MenuScreen extends React.Component {
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'learn');
+
+    return (
+      <View style={styles.container}>
+        <Text>{type}</Text>
+        <Button
+          containerStyle={styles.button}
+          title="Alphabet"
+          onPress={() =>
+            this.props.navigation.push('Learn', {
+              sectionName: 'alphabet',
+              type: type
+            })}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Basic Etiquette"
+          onPress={() =>
+            this.props.navigation.push('Learn', {
+              sectionName: 'etiquette',
+              type: type,
+            })}
+        />
+      </View>
     );
   }
 }
 
 class LearnScreen extends React.Component {
   render() {
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
-        <Text style={styles.bigBlue}>Hello world!</Text>
-        <Image source = {pic} style={{width: 193, height: 100}}/>
-        <Greeting flower='sunflower' />
-        <Greeting flower='daisy' />
-        
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={this._hellooo}
-            title="Press me!!"
-          />
-        </View>
-        <Blink text='Blinkkkkkk' />
-        
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'learn');
+    const sectionName = navigation.getParam('sectionName', 'alphabet');
+
+    return (
+      <View style={styles.container}>
+        <Text>{type}</Text>
+        <Text>{sectionName}</Text>
       </View>
+    );
   }
 }
 
-// const instructions = Platform.select({
-//   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-//   android:
-//     'Double tap R on your keyboard to reload,\n' +
-//     'Shake or press menu button for dev menu',
-// });
+const AppNavigator = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Menu: MenuScreen,
+    Learn: LearnScreen
+  },
+  {
+    initialRouteName: "Home"
+  }
+);
 
-// class Greeting extends Component {
-//   render() {
-//     return (
-//       <View style={{alignItems: 'center'}}>
-//         <Text>Hello {this.props.flower}!</Text>
-//       </View>
-//     );
-//   }
-// }
 
-// class Blink extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {isShowingText: true};
+const AppContainer = createAppContainer(AppNavigator);
 
-//     setInterval(() => (
-//       this.setState(previousState => (
-//         {isShowingText: !previousState.isShowingText}
-//       ))
-//     ), 1000);
-//   }
-//   render() {
-//     if (!this.state.isShowingText) {
-//       return null;
-//     }
-//     return (
-//       <Text>{this.props.text}</Text>
-//     );
-//   }
-// }
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
 
-// type Props = {};
-// export default class App extends Component<Props> {
-//   _hellooo() {
-//     Alert.alert('Hellloooooo')
-//   }
-//   render() {
-//     let pic = {
-//       uri: 'https://www.johnnyseeds.com/dw/image/v2/BBBW_PRD/on/demandware.static/-/Sites-jss-master/default/dw2f79264c/images/products/flowers/01814_01_sunrichorangesum.jpg?sw=387&cx=302&cy=0&cw=1196&ch=1196'
-//     };
-//     return (
-//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
-//         <Text style={styles.bigBlue}>Hello world!</Text>
-//         <Image source = {pic} style={{width: 193, height: 100}}/>
-//         <Greeting flower='sunflower' />
-//         <Greeting flower='daisy' />
-        
-//         <View style={styles.buttonContainer}>
-//           <Button
-//             onPress={this._hellooo}
-//             title="Press me!!"
-//           />
-//         </View>
-//         <Blink text='Blinkkkkkk' />
-        
-//       </View>
-//       // <View style={styles.container}>
-//       //   <Text style={styles.welcome}>Welcome to React Native!</Text>
-//       //   <Text style={styles.instructions}>To get started, edit App.js</Text>
-//       //   <Text style={styles.instructions}>{instructions}</Text>
-//       // </View>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-//   welcome: {
-//     fontSize: 20,
-//     textAlign: 'center',
-//     margin: 10,
-//   },
-//   instructions: {
-//     textAlign: 'center',
-//     color: '#333333',
-//     marginBottom: 5,
-//   },
-//   bigBlue: {
-//     color: 'blue',
-//     fontWeight: 'bold',
-//     fontSize: 30,
-//   }
-// });
+const styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+   },
+   button: {
+      padding:10
+   }
+})
