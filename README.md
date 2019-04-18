@@ -2,7 +2,7 @@
 <img src="./images/HelpingHandsLogo.png" width="25%">
 
 ## Synopsis
-Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing
+Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing.
 
 ## Team Members
 
