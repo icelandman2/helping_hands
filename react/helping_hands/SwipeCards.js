@@ -22,8 +22,12 @@ class Card extends React.Component {
   //       return require('/img/alphabet_signs/a.png');
   //   }
   // }
+  setGlobal() {
+    global.current_name = this.props.name;
+  }
 
   render() {
+    this.setGlobal();
     return (
       <View style={styles.card}>
         <Image source={images[this.props.name]} />
@@ -44,6 +48,7 @@ class NoMoreCards extends Component {
         <Text style={styles.noMoreCardsText}>No more cards</Text>
         <Text style={styles.noMoreCardsText}>Learned: {global.learned.toString()}</Text>
         <Text style={styles.noMoreCardsText}>Not learned: {global.not_learned.toString()}</Text>
+        <Text style={styles.noMoreCardsText}>Total: {global.cards_left.toString()}</Text>
       </View>
     )
   }
@@ -54,35 +59,36 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
     global.curr_alphabet_cards = 0;
+    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f'];
 
     this.state = {
       cards: [
         {name: 'a'},
         {name: 'b'},
         {name: 'c'},
-        {name: 'd'},
-        {name: 'e'},
-        {name: 'f'},
-        {name: 'g'},
-        {name: 'h'},
-        {name: 'i'},
-        {name: 'j'},
-        {name: 'k'},
-        {name: 'l'},
-        {name: 'm'},
-        {name: 'n'},
-        {name: 'o'},
-        {name: 'p'},
-        {name: 'q'},
-        {name: 'r'},
-        {name: 's'},
-        {name: 't'},
-        {name: 'u'},
-        {name: 'v'},
-        {name: 'w'},
-        {name: 'x'},
-        {name: 'y'},
-        {name: 'z'},
+        // {name: 'd'},
+        // {name: 'e'},
+        // {name: 'f'},
+        // {name: 'g'},
+        // {name: 'h'},
+        // {name: 'i'},
+        // {name: 'j'},
+        // {name: 'k'},
+        // {name: 'l'},
+        // {name: 'm'},
+        // {name: 'n'},
+        // {name: 'o'},
+        // {name: 'p'},
+        // {name: 'q'},
+        // {name: 'r'},
+        // {name: 's'},
+        // {name: 't'},
+        // {name: 'u'},
+        // {name: 'v'},
+        // {name: 'w'},
+        // {name: 'x'},
+        // {name: 'y'},
+        // {name: 'z'},
       ]
     };
     this.state.cards = this.shuffle(this.state.cards);
@@ -108,14 +114,17 @@ export default class extends React.Component {
   }
 
   handleYup (card) {
+    global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.learned.push(card.name);
     global.curr_alphabet_cards = global.curr_alphabet_cards+1;
   }
   handleNope (card) {
+    global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.not_learned.push(card.name);
     global.curr_alphabet_cards = global.curr_alphabet_cards+1;
   }
   handleMaybe (card) {
+    global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.maybe_learned.push(card.name);
   }
   render() {

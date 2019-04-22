@@ -13,6 +13,10 @@ npm install --save react-native-swipe-cards
 
 npm install react-native-progress --save
 
+npm install react-native-camera --save
+
+react-native link react-native-camera
+
 
 Basic React Native tutorials:
 https://facebook.github.io/react-native/docs/tutorial
