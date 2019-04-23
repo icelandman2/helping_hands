@@ -39,6 +39,36 @@ class HomeScreen extends React.Component {
 }
 
 class MenuScreen extends React.Component {
+
+  pressAlphabet= async function() {
+    this.props.navigation.push('Learn', {
+              sectionName: 'alphabet',
+              type: 'learn'
+            });
+    global.cards_left = ['a', 'b', 'c'];
+    global.curr_cards = 0;
+    global.total_cards = 26;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+
+  };
+
+  pressEtiquette= async function() {
+    this.props.navigation.push('Learn', {
+              sectionName: 'etiquette',
+              type: 'learn'
+            });
+    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.curr_cards = 0;
+    global.total_cards = 3;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+  };
+
   render() {
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'learn');
@@ -48,21 +78,13 @@ class MenuScreen extends React.Component {
         <Button
           containerStyle={styles.button}
           title="Alphabet"
-          onPress={() =>
-            this.props.navigation.push('Learn', {
-              sectionName: 'alphabet',
-              type: type
-            })}
+          onPress={this.pressAlphabet.bind(this)}
         />
 
         <Button
           containerStyle={styles.button}
           title="Basic Etiquette"
-          onPress={() =>
-            this.props.navigation.push('Learn', {
-              sectionName: 'etiquette',
-              type: type,
-            })}
+          onPress={this.pressEtiquette.bind(this)}
         />
       </View>
     );
@@ -87,7 +109,7 @@ class LearnScreen extends React.Component {
     setTimeout(() => {
       this.setState({ indeterminate: false });
       setInterval(() => {
-        progress = parseFloat(global.curr_alphabet_cards)/parseFloat(global.total_alphabet_cards);
+        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
         this.setState({ progress });
       }, 500);
     }, 1500);
@@ -102,10 +124,11 @@ class LearnScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+
         <Text>{type}</Text>
         <Text>{sectionName}</Text>
         <Text>____{global.cards_left.toString()}___</Text>
-        <Progress.Bar progress={parseFloat(global.curr_alphabet_cards)/parseFloat(global.total_alphabet_cards)} width={200} />
+        <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />
         <SwipeCards style={{flex: 1}} />
         
         <Button
@@ -113,6 +136,13 @@ class LearnScreen extends React.Component {
           title="Check sign"
           onPress={() =>
             this.props.navigation.push('Camera')}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Back to Learn Menu"
+          onPress={() =>
+            this.props.navigation.push('Menu')}
         />
 
       </View>
