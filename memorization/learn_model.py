@@ -9,7 +9,7 @@ import time
 """
 Learning Management Class for Helping Hands
 
-Currently a skeleton implementation of learning management/spaced-repetition algorithm for Helping Hands App.
+Currently a basic implementation of learning management/spaced-repetition algorithm for Helping Hands App.
 Will return to make more advanced/useful over time. Eventually plan to implement a variant of SuperMemo.
 
 Usage:
@@ -53,14 +53,18 @@ class LearningManager:
 		3: how many times tried
 		4: current hardness adjustment
 		'''
+		#map of info to be deep-copied for every user
 		local_map = {k: (self.init_time, init_recall_time, 0, 0, max_ease) for v,k in enumerate(tokens_to_learn)}
+
+		#global variables
 		self.min_ease = min_ease
 		self.max_ease = max_ease
 		self.minutes = minutes
 		self.penalty = fail_penalty
-
 		self.users_ordered = users
 		self.user_data = []
+
+		#initialize user_data
 		for u in users:
 			#tuple of local map initialized with the "shuffled state" not yet initialized
 			u_tuple = (copy.deepcopy(local_map), [])
@@ -92,6 +96,7 @@ class LearningManager:
 		if user_index == -1:
 			return user_index
 		cur_map, cur_shuf = list(self.user_data[user_index])
+		#retrieves all past-due cards, shuffles them, updates state to represent that, and returns these card tokens
 		current_cards = [k for k in cur_map if cur_map[k][0]<current_time]
 		random.shuffle(current_cards)
 		cur_shuf = current_cards
@@ -159,6 +164,11 @@ class LearningManager:
 			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty = retrieved_tuple
 
 def test_learningManager():
+	"""
+	Performs tests on LearningManager class for sanity check of implementation. Verifies correctness of 
+	cards due for review, updates with new knowledge, time till next review, handling of multiple users,
+	io errors, and save/load functionality. Not intended to be comprehensive.
+	"""
 	tokens = ['a', 'b', 'c']
 
 	print("preparing learning manager on toy data and performing basic tests")
