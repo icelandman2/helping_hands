@@ -22,11 +22,17 @@ order to feed back. Test user on these cards and feed back with update_knowledge
 Obtain new training cards (note new ordering) by running get_today_cards again. Iterate between these until you get empty List from 
 get_today_cards.
 
+3. If you have already exhausted the cards in the deck for now, you can study again/more with get_extra_cards.
+
 Note that you can save/load to a pickle file using save_to_pickle and get_from_pickle. These will fully populate the class with
 the saved state. Uses system time, which may cause problems across timezones!
 
-
-Need to upgrade in order to adjust ease dynamically, and add option for user to report hardness of correct answer.
+TODOS
+1. Need to upgrade in order to adjust ease dynamically
+2. Add option for user/vision algo to report hardness/closeness of "correct" answer
+3. Add user option
+4. Add tokens option
+5. getter/setter functions for globals/user variables
 """
 
 class LearningManager:
@@ -54,7 +60,7 @@ class LearningManager:
 		4: current hardness adjustment
 		'''
 		#map of info to be deep-copied for every user
-		local_map = {k: (self.init_time, init_recall_time, 0, 0, max_ease) for v,k in enumerate(tokens_to_learn)}
+		self.map = {k: (self.init_time, init_recall_time, 0, 0, max_ease) for v,k in enumerate(tokens_to_learn)}
 
 		#global variables
 		self.min_ease = min_ease
@@ -67,7 +73,7 @@ class LearningManager:
 		#initialize user_data
 		for u in users:
 			#tuple of local map initialized with the "shuffled state" not yet initialized
-			u_tuple = (copy.deepcopy(local_map), [])
+			u_tuple = (copy.deepcopy(self.map), [])
 			self.user_data.append(u_tuple)
 
 	def check_valid_user(self, user):
@@ -102,6 +108,35 @@ class LearningManager:
 		cur_shuf = current_cards
 		self.user_data[user_index] = (cur_map, cur_shuf)
 		return current_cards
+
+	def get_extra_cards(self, user, num_cards=10):
+		"""
+		Do extra studying beyond just the cards that are due. If cards are due, will instead just return cards due.
+		Returns the num_cards that are due the soonest otherwise. Note that this function updates the shuffled state. 
+		@param user: The user token we are getting extra cards for
+		@param num_cards: The number of extra cards to obtain
+		@return cards: the extra cards to study. Returns -1 if invalid user
+		"""
+
+		check_today = self.get_today_cards(user)
+		if len(check_today) > 0:
+			return check_today
+		user_index = self.check_valid_user(user)
+
+
+		cur_map, cur_shuf = list(self.user_data[user_index])
+		ordered_by_staleness = sorted(cur_map.items(), key = lambda kv:(list(kv[1])[0], kv[0]))
+
+		cards = [v[0] for v in ordered_by_staleness]
+		if len(cards)<num_cards:
+			random.shuffle(cards)
+			self.user_data[user_index] = (cur_map, cards)
+			return cards
+		else:
+			oldest = cards[0:num_cards]
+			random.shuffle(oldest)
+			self.user_data[user_index] = (cur_map, oldest)
+			return oldest
 
 	def update_knowledge(self, user, results, bin=True):
 		"""
@@ -150,7 +185,7 @@ class LearningManager:
 		Saves the current state to a pickle file for later retrieval.
 		"""
 
-		tuple_to_pickle = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty)
+		tuple_to_pickle = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map)
 		with open('data/learning_data.pickle', 'wb') as handle:
 			pickle.dump(tuple_to_pickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -161,9 +196,9 @@ class LearningManager:
 
 		with open('data/learning_data.pickle', 'rb') as handle:
 			retrieved_tuple = pickle.load(handle)
-			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty = retrieved_tuple
+			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map = retrieved_tuple
 
-def test_learningManager():
+def test_learningManager(skip_long=False):
 	"""
 	Performs tests on LearningManager class for sanity check of implementation. Verifies correctness of 
 	cards due for review, updates with new knowledge, time till next review, handling of multiple users,
@@ -177,7 +212,7 @@ def test_learningManager():
 		sys.stdout.write(".")
 		sys.stdout.flush()
 	print("")
-	test = LearningManager([1, 2, 3], tokens_to_learn=tokens, minutes=True)
+	test = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
 	vals = test.get_today_cards(1)
 	assert len(vals) == len(tokens), "length of test does not match!"
 	test.update_knowledge(1, [0, 1, 1])
@@ -207,16 +242,17 @@ def test_learningManager():
 	assert len(test.get_today_cards(1)) == 0, "thinks user 1 still needs to review"
 	print("model setup and basic checks passed!")
 
+	if not skip_long:
+		print("testing we delay the right amount of time until further review")
+		for i in range(0, 19):
+			assert len(test.get_today_cards(1)) == 0, "\nthinks user 1 still needs to review too early"
+			time.sleep(.5)
+			sys.stdout.write(".")
+			sys.stdout.flush()
+		print("")
+		assert len(test.get_today_cards(1)) == 1, "\ndoesn't realize that user 1 needs to review"
+		print("spaced repetition sanity check passed!")
 
-	print("testing we delay the right amount of time until further review")
-	for i in range(0, 19):
-		assert len(test.get_today_cards(1)) == 0, "\nthinks user 1 still needs to review too early"
-		time.sleep(.5)
-		sys.stdout.write(".")
-		sys.stdout.flush()
-	print("")
-	assert len(test.get_today_cards(1)) == 1, "\ndoesn't realize that user 1 needs to review"
-	print("spaced repetition sanity check passed!")
 
 	print("testing save/load functionality")
 	for i in range(0, 19):
@@ -227,11 +263,25 @@ def test_learningManager():
 	test.save_to_pickle()
 	newV = LearningManager([1], tokens_to_learn=['a','c','d'], minutes=False)
 	newV.get_from_pickle()
-	assert len(newV.get_today_cards(1)) == 1, "failed to retrieve users properly"
+	if not skip_long:
+		assert len(newV.get_today_cards(1)) == 1, "failed to retrieve users properly"
+	else:
+		assert len(newV.get_today_cards(1)) == 0, "failed to retrieve users properly"
 	assert len(newV.get_today_cards(3)) == 3, "failed to retrieve users properly"
 	#TODO update with check on minutes, tokens to learn
 	print("save/load functionality checks passed!\n")
+
+	check_extras = newV.get_extra_cards(4, num_cards=1)
+	assert len(check_extras) == 3, "allowing user to skip cards"
+	newV.update_knowledge(3, [0,0,1])
+	cards = newV.get_today_cards(3)
+	newV.update_knowledge(3, [0,1])
+	newV.get_today_cards(3)
+	newV.update_knowledge(3,[1])
+	arr = newV.get_extra_cards(3, num_cards=2)
+	assert cards[0] in arr and cards[1] in arr, "wrong cards returned in extra studying"
+
 	print("all tests passed!")
 
 if __name__ == '__main__':
-    test_learningManager()
+    test_learningManager(skip_long=False)
