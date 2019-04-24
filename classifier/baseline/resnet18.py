@@ -33,6 +33,7 @@ data_transforms = {
 }
 
 data_dir = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/data/'
+model_output_path = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/classifier/models/resnet18.pt'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def imshow(inp, title = None):
@@ -47,7 +48,7 @@ def imshow(inp, title = None):
         plt.title(title)
     plt.pause(0.001)  # pause a bit so that plots are updated
 
-def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs = 10):
+def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs = 5):
     since = time.time()
 
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -120,6 +121,7 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
 
     # load best model weights
     model.load_state_dict(best_model_wts)
+    torch.save(best_model_wts, model_output_path)
     return model, best_acc
 
 def visualize_model(model, num_images = 6):
