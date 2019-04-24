@@ -1,8 +1,8 @@
-{'file': '../baselines/resnet18/py'}
-{'train': 74359, 'val': 24787}
-{'optimizer': 'SGD', 'init_lr': 0.001, 'momentum' = 0.9}
-{'decay': True, 'gamma': 0.1, 'epochs': 7}
-{'batch_size': 32, 'epochs': 5}
+{'file': '../baselines/resnet18/py'}<br>
+{'train': 74359, 'val': 24787}<br>
+{'optimizer': 'SGD', 'init_lr': 0.001, 'momentum' = 0.9}<br>
+{'decay': True, 'gamma': 0.1, 'epochs': 7}<br>
+{'batch_size': 32, 'epochs': 5}<br>
 
 
 Epoch 0/4
