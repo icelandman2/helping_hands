@@ -24,15 +24,18 @@ get_today_cards.
 
 3. If you have already exhausted the cards in the deck for now, you can study again/more with get_extra_cards.
 
-Note that you can save/load to a pickle file using save_to_pickle and get_from_pickle. These will fully populate the class with
-the saved state. Uses system time, which may cause problems across timezones!
+4. A user can be added with add_user, and tokens can be added with add_tokens. You can save/load to a pickle file using save_to_pickle
+and get_from_pickle. These will fully populate the class with the saved state.
+
+5. retrieve_shuffled_state, get_time_due, get_accuracy, get_init_recall_time, set_init_recall_time, get_min_ease, set_min_ease,
+get_max_ease, set_max_ease, get_penalty, and set_penalty are available for use. All work as getter/setter functions for the appropriate
+data.
+
+Note: Uses system time, which may cause problems across timezones!
 
 TODOS
 1. Need to upgrade in order to adjust ease dynamically
 2. Add option for user/vision algo to report hardness/closeness of "correct" answer
-3. Add user option
-4. Add tokens option
-5. getter/setter functions for globals/user variables
 """
 
 class LearningManager:
@@ -63,6 +66,7 @@ class LearningManager:
 		self.map = {k: (self.init_time, init_recall_time, 0, 0, max_ease) for v,k in enumerate(tokens_to_learn)}
 
 		#global variables
+		self.init_recall_time = init_recall_time
 		self.min_ease = min_ease
 		self.max_ease = max_ease
 		self.minutes = minutes
@@ -76,6 +80,117 @@ class LearningManager:
 			u_tuple = (copy.deepcopy(self.map), [])
 			self.user_data.append(u_tuple)
 
+	def retrieve_shuffled_state(self, user):
+		"""
+		Get the current shuffled state the system expects for this user. Useful if you lost it somehow.
+		@param user: the user to seek
+		@return state: the shuffled state. -1 if user not found
+		"""
+		user_index = self.check_valid_user(user)
+		if user_index == -1:
+			return user_index
+		cur_map, state = list(self.user_data[user_index])
+		return state
+
+	def get_time_due(self, user, token):
+		"""
+		Get the datetime that a given card will be due.
+		@param user: The user we are checking for
+		@param token: The card we want to know about
+		@return time: the time this card will be due. Returns -1 if user not found. No error checking for card.
+		"""
+		user_index = self.check_valid_user(user)
+		if user_index == -1:
+			return user_index
+		cur_map, state = list(self.user_data[user_index])
+		time, r, c, a, e = cur_map[token]
+		return time
+
+	def get_accuracy(self, user, token):
+		"""
+		Get the accuracy for this user on a given card.
+		@param user: The user we are checking for
+		@param token: The card we want to know about
+		@return accuracy: the accuracy of the user on this card. Returns -1 if user not found. No error checking for card.
+		"""
+		user_index = self.check_valid_user(user)
+		if user_index == -1:
+			return user_index
+		cur_map, state = list(self.user_data[user_index])
+		t, r, correct, allV, e = cur_map[token]
+		if allV==0:
+			return 0.0
+		accuracy = float(correct) / float(allV)
+		return accuracy
+
+	def get_init_recall_time(self):
+		"""
+		Get the default time till you see a card again if you get it right the first time.
+		@return the recall time
+		"""
+		return self.init_recall_time
+
+	def set_init_recall_time(self, new_val):
+		"""
+		Set the default time till you see a card again if you get it right the first time.
+		@param new_val: The time (in minutes/days) to set to
+		"""
+		self.init_recall_time = new_val
+
+	def get_min_ease(self):
+		"""
+		Get the current minimum ease.
+		@return the minimum ease of the manager
+		"""
+		return self.min_ease
+
+	def set_min_ease(self, new_val):
+		"""
+		Set a new minimum ease.
+		@param new_val: the value to set the minimum ease to (must be >1), and less than max ease. 
+		Returns -1 if out of bounds.
+		"""
+		if new_val < 1 or new_val>self.max_ease:
+			return -1
+		else:
+			self.min_ease = new_val
+
+	def get_max_ease(self):
+		"""
+		Get the current maximum ease.
+		@return the maximum ease of the manager
+		"""
+		return self.max_ease
+
+	def set_max_ease(self, new_val):
+		"""
+		Set a new maximum ease.
+		@param new_val: the value to set the maximum ease to (must be >1), and greater than min ease. 
+		Returns -1 if out of bounds.
+		"""
+		if new_val < 1 or new_val<self.min_ease:
+			return -1
+		else:
+			self.max_ease = new_val
+
+	def get_penalty(self):
+		"""
+		Get the current penalty factor for incorrect answers.
+		@return the current penalty
+		"""
+		return self.penalty
+
+	def set_penalty(self, new_val):
+		"""
+		Set the penalty factor for incorrect answers. Must be greater than 1
+		@param new_val: the value to set as the new penalty factor
+		@return -1 if out of bounds.
+		"""
+		if new_val<1:
+			return -1
+		else:
+			self.penalty = new_val
+
 	def check_valid_user(self, user):
 		"""
 		Function to check whether a user token is valid and return -1 if not
@@ -88,6 +203,31 @@ class LearningManager:
 		except:
 			#print("Error in the backroom - user token not found")
 			return -1
+
+	def add_user(self, user):
+		"""
+		Add a new user to the learning management system. 
+		@param user: the unique token for the new user to be added
+		@return -1 if user token already in use
+		"""
+		if user in self.users_ordered:
+			return -1
+		self.users_ordered.append(user)
+		u_tuple = (copy.deepcopy(self.map), [])
+		self.user_data.append(u_tuple)
+
+	def add_tokens(self, tokens):
+		"""
+		Add some new tokens to the learning management system for all users. Note that any existing
+		tokens included here will not be reset, and will instead be ignored (as if they weren't added)
+		@param tokens: List of tokens to add
+		"""
+		token_map = {k: (self.init_time, self.init_recall_time, 0, 0, self.max_ease) for v,k in enumerate(tokens)}
+		token_map.update(self.map)
+		for i,u in enumerate(self.users_ordered):
+			cur_map, shuf = list(self.user_data[i])
+			token_map.update(cur_map)
+			self.user_data[i] = (token_map, shuf)
 
 	def get_today_cards(self, user):
 		"""
@@ -185,7 +325,7 @@ class LearningManager:
 		Saves the current state to a pickle file for later retrieval.
 		"""
 
-		tuple_to_pickle = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map)
+		tuple_to_pickle = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time)
 		with open('data/learning_data.pickle', 'wb') as handle:
 			pickle.dump(tuple_to_pickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -196,7 +336,15 @@ class LearningManager:
 
 		with open('data/learning_data.pickle', 'rb') as handle:
 			retrieved_tuple = pickle.load(handle)
-			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map = retrieved_tuple
+			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_tuple
+
+
+def dotline():
+	for i in range(0, 19):
+		time.sleep(.01)
+		sys.stdout.write(".")
+		sys.stdout.flush()
+	print("")
 
 def test_learningManager(skip_long=False):
 	"""
@@ -207,11 +355,7 @@ def test_learningManager(skip_long=False):
 	tokens = ['a', 'b', 'c']
 
 	print("preparing learning manager on toy data and performing basic tests")
-	for i in range(0, 19):
-		time.sleep(.01)
-		sys.stdout.write(".")
-		sys.stdout.flush()
-	print("")
+	dotline()
 	test = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
 	vals = test.get_today_cards(1)
 	assert len(vals) == len(tokens), "length of test does not match!"
@@ -255,11 +399,7 @@ def test_learningManager(skip_long=False):
 
 
 	print("testing save/load functionality")
-	for i in range(0, 19):
-		time.sleep(.01)
-		sys.stdout.write(".")
-		sys.stdout.flush()
-	print("")
+	dotline()
 	test.save_to_pickle()
 	newV = LearningManager([1], tokens_to_learn=['a','c','d'], minutes=False)
 	newV.get_from_pickle()
@@ -268,9 +408,10 @@ def test_learningManager(skip_long=False):
 	else:
 		assert len(newV.get_today_cards(1)) == 0, "failed to retrieve users properly"
 	assert len(newV.get_today_cards(3)) == 3, "failed to retrieve users properly"
-	#TODO update with check on minutes, tokens to learn
-	print("save/load functionality checks passed!\n")
+	print("save/load functionality checks passed!")
 
+	print("testing ability to get extra cards, add users, and add cards")
+	dotline()
 	check_extras = newV.get_extra_cards(4, num_cards=1)
 	assert len(check_extras) == 3, "allowing user to skip cards"
 	newV.update_knowledge(3, [0,0,1])
@@ -280,8 +421,37 @@ def test_learningManager(skip_long=False):
 	newV.update_knowledge(3,[1])
 	arr = newV.get_extra_cards(3, num_cards=2)
 	assert cards[0] in arr and cards[1] in arr, "wrong cards returned in extra studying"
+	newV.add_user("abc")
+	assert len(newV.get_today_cards("abc")) == 3, "adding user failed"
+	newV.add_tokens(["do", "re", "mi"])
+	newV.add_tokens([])
+	assert len(newV.get_today_cards("abc")) == 6, "adding tokens failed"
+	print("card and user manipulation tests passed!")
+	
+	print("testing whether we can get/set values properly")
+	dotline()
+	assert newV.get_today_cards("abc") == newV.retrieve_shuffled_state("abc"), "error retrieving shuffled state"
+	assert newV.get_init_recall_time() == 1, "recall time wrong"
+	newV.set_init_recall_time(.5)
+	assert newV.get_init_recall_time() == .5, "recall time changed wrong"
+	assert newV.get_min_ease() == 1.1, "min ease wrong"
+	newV.set_min_ease(1.2)
+	assert newV.get_min_ease() == 1.2, "min ease changed wrong"
+	assert newV.get_max_ease() == 2.5, "max ease wrong"
+	newV.set_max_ease(2.3)
+	assert newV.get_max_ease() == 2.3, "max ease changed wrong"
+	assert newV.get_penalty() == 2.0, "penalty wrong"
+	newV.set_penalty(2.1)
+	assert newV.get_penalty() == 2.1, "penalty changed wrong"
+	accuracy_test = LearningManager([1], tokens_to_learn=["a"], minutes=True)
+	assert accuracy_test.get_accuracy(1, "a") == 0.0, "wrong initial accuracy"
+	accuracy_test.get_today_cards(1)
+	accuracy_test.update_knowledge(1, [0])
+	accuracy_test.update_knowledge(1, [1])
+	assert accuracy_test.get_accuracy(1, "a") == 0.5, "wrong updated accuracy"
+	print("get/set checks passed!")
 
-	print("all tests passed!")
+	print("\nall tests passed!")
 
 if __name__ == '__main__':
     test_learningManager(skip_long=False)
