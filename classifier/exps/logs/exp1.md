@@ -30,5 +30,5 @@ Epoch 4/4
 train Loss: 1.6206 Acc: 0.5327
 val Loss: 0.9679 Acc: 0.7287
 
-Training complete in 557m 46s
-Best val acc: 0.728729
+# Training complete in 557m 46s
+# Best val acc: 0.728729
