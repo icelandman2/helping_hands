@@ -1,1 +1,4 @@
-memorization/data/
+
+
+*.pkl
+*.pickle
