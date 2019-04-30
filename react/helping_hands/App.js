@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppRegistry, View, Text , Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
+import { AppRegistry, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -11,9 +11,40 @@ import SwipeCards from './SwipeCards.js'
 import * as Progress from 'react-native-progress';
 
 class HomeScreen extends React.Component {
+  constructor(props){
+    super(props);
+    this.state ={ isLoading: true}
+  }
+
+  componentDidMount(){
+    return fetch('https://facebook.github.io/react-native/movies.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.movies,
+        }, function(){
+
+        });
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+  // export const test = () => {
+  //   return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
+  //     .then((res) => res);
+  // }
   render() {
     return (
       <View style={styles.container}>
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
+          keyExtractor={({id}, index) => id}
+        />
         <Image source={require('./img/HelpingHandsLogo.png')} 
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
         <Button

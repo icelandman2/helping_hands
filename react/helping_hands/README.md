@@ -35,3 +35,9 @@ https://cecilycodes.com/creating-a-multi-page-react-native-app/
 Loading:
 https://github.com/oblador/react-native-progress
 
+Google Cloud Functions + React Native:
+https://www.oreilly.com/learning/serverless-on-google-with-cloud-functions-and-react
+
+	1. Install Google Cloud SDK: 
+		https://cloud.google.com/sdk/docs/quickstart-macos 
+
