@@ -53,3 +53,6 @@ https://medium.com/google-cloud/upload-images-to-google-cloud-storage-with-react
 Processing Image with Google Cloud
 https://cloud.google.com/functions/docs/tutorials/imagemagick
 
+Binding???
+https://medium.com/shoutem/react-to-bind-or-not-to-bind-7bf58327e22a
+
