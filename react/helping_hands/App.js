@@ -3,15 +3,21 @@ import { AppRegistry, View, Text, FlatList, Image, StyleSheet, Dimensions, Touch
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import firebase from 'firebase'
+import * as Progress from 'react-native-progress';
+
+// import firebase from 'firebase'
+import RNFetchBlob from 'rn-fetch-blob';
 
 
 import {RNCamera} from 'react-native-camera';
 
 import SwipeCards from './SwipeCards.js'
-import RNFetchBlob from 'rn-fetch-blob';
 
-import * as Progress from 'react-native-progress';
+import uuid from 'uuid';
+// import Environment from './config/environment';
+import firebase from './config/firebase';
+
+
 
 class HomeScreen extends React.Component {
   constructor(props){
@@ -195,40 +201,66 @@ class CameraScreen extends React.Component {
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
 
+      const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', data.uri, true);
+      xhr.send(null);
+    });
 
-      const image = data.uri;
+    const ref = firebase
+      .storage()
+      .ref()
+      .child(uuid.v4());
+    const snapshot = await ref.put(blob);
 
-      const Blob = RNFetchBlob.polyfill.Blob
-      const fs = RNFetchBlob.fs
-      window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-      window.Blob = Blob
+    blob.close();
+
+    console.log(snapshot.ref.getDownloadURL());
+
+    // return await snapshot.ref.getDownloadURL();
+
+
+      // const image = data.uri;
+
+      // const Blob = RNFetchBlob.polyfill.Blob
+      // const fs = RNFetchBlob.fs
+      // window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+      // window.Blob = Blob
    
      
-      let uploadBlob = null
-      const imageRef = firebase.storage().ref('posts').child("test.jpg")
-      let mime = 'image/jpg'
-      fs.readFile(image, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-      })
-      .then((blob) => {
-          uploadBlob = blob
-          return imageRef.put(blob, { contentType: mime })
-        })
-        .then(() => {
-          uploadBlob.close()
-          console.log(imageRef.getDownloadURL);
-          return imageRef.getDownloadURL();
-        })
-        .then((url) => {
-          // URL of the image uploaded on Firebase storage
-          console.log(url);
+      // let uploadBlob = null
+      // const imageRef = firebase.storage().ref('posts').child("test.jpg")
+      // let mime = 'image/jpg'
+      // fs.readFile(image, 'base64')
+      //   .then((data) => {
+      //     return Blob.build(data, { type: `${mime};BASE64` })
+      // })
+      // .then((blob) => {
+      //     uploadBlob = blob
+      //     return imageRef.put(blob, { contentType: mime })
+      //   })
+      //   .then(() => {
+      //     uploadBlob.close()
+      //     console.log(imageRef.getDownloadURL);
+      //     return imageRef.getDownloadURL();
+      //   })
+      //   .then((url) => {
+      //     // URL of the image uploaded on Firebase storage
+      //     console.log(url);
           
-        })
-        .catch((error) => {
-          console.log(error);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
    
-        })  
+      //   })  
       
 
       this.props.navigation.push('Learn');
