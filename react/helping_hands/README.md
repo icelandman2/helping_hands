@@ -17,6 +17,12 @@ npm install react-native-camera --save
 
 react-native link react-native-camera
 
+npm install react-native-image-picker --save
+react-native link react-native-image-picker
+
+npm --save install firebase
+
+npm install --save rn-fetch-blob
 
 Basic React Native tutorials:
 https://facebook.github.io/react-native/docs/tutorial
@@ -55,4 +61,12 @@ https://cloud.google.com/functions/docs/tutorials/imagemagick
 
 Binding???
 https://medium.com/shoutem/react-to-bind-or-not-to-bind-7bf58327e22a
+
+Authentication:
+https://cloud.google.com/docs/authentication/getting-started
+
+GOOGLE CLOUD FUNCTIONS DON'T WORK WITH REACT NATIVE
+
+Firebase new start:
+http://nobrok.com/how-to-upload-image-to-firebase-using-react-native/
 
