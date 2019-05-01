@@ -16,23 +16,23 @@ class HomeScreen extends React.Component {
     this.state ={ isLoading: true}
   }
 
-  componentDidMount(){
-    return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
-      .then((response) => response.json())
-      .then((responseJson) => {
+  // componentDidMount(){
+  //   return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
+  //     .then((response) => response.json())
+  //     .then((responseJson) => {
 
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.sign,
-        }, function(){
+  //       this.setState({
+  //         isLoading: false,
+  //         dataSource: responseJson.sign,
+  //       }, function(){
 
-        });
+  //       });
 
-      })
-      .catch((error) =>{
-        console.error(error);
-      });
-  }
+  //     })
+  //     .catch((error) =>{
+  //       console.error(error);
+  //     });
+  // }
 
   hellloooo() {
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
@@ -40,7 +40,6 @@ class HomeScreen extends React.Component {
       .then((responseJson) => {
 
         this.setState({
-          isLoading: false,
           dataSource: responseJson.sign,
         }, function(){
 
@@ -69,7 +68,7 @@ class HomeScreen extends React.Component {
           <Button
           containerStyle={styles.button}
           title="!!"
-          onPress={this.hellloooo}
+          onPress={() => this.hellloooo()}
         />
 
 
