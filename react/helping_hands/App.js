@@ -17,13 +17,13 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount(){
-    return fetch('https://facebook.github.io/react-native/movies.json')
+    return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
       .then((response) => response.json())
       .then((responseJson) => {
 
         this.setState({
           isLoading: false,
-          dataSource: responseJson.movies,
+          dataSource: responseJson.sign,
         }, function(){
 
         });
@@ -33,18 +33,29 @@ class HomeScreen extends React.Component {
         console.error(error);
       });
   }
-  // export const test = () => {
-  //   return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
-  //     .then((res) => res);
-  // }
+
+  hellloooo() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.sign,
+        }, function(){
+
+        });
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
-          keyExtractor={({id}, index) => id}
-        />
+        <Text>{this.state.dataSource}</Text>
         <Image source={require('./img/HelpingHandsLogo.png')} 
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
         <Button
@@ -54,6 +65,14 @@ class HomeScreen extends React.Component {
             type: 'learn',
           })}
         />
+
+          <Button
+          containerStyle={styles.button}
+          title="!!"
+          onPress={this.hellloooo}
+        />
+
+
 
         <Button
           containerStyle={styles.button}
