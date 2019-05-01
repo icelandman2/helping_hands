@@ -3,10 +3,13 @@ import { AppRegistry, View, Text, FlatList, Image, StyleSheet, Dimensions, Touch
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
+import firebase from 'firebase'
+
+
 import {RNCamera} from 'react-native-camera';
 
 import SwipeCards from './SwipeCards.js'
-
+import RNFetchBlob from 'rn-fetch-blob';
 
 import * as Progress from 'react-native-progress';
 
@@ -16,25 +19,7 @@ class HomeScreen extends React.Component {
     this.state ={ isLoading: true}
   }
 
-  // componentDidMount(){
-  //   return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
-  //     .then((response) => response.json())
-  //     .then((responseJson) => {
-
-  //       this.setState({
-  //         isLoading: false,
-  //         dataSource: responseJson.sign,
-  //       }, function(){
-
-  //       });
-
-  //     })
-  //     .catch((error) =>{
-  //       console.error(error);
-  //     });
-  // }
-
-  hellloooo() {
+  test_google_cloud() {
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -68,7 +53,7 @@ class HomeScreen extends React.Component {
           <Button
           containerStyle={styles.button}
           title="!!"
-          onPress={() => this.hellloooo()}
+          onPress={() => this.test_google_cloud()}
         />
 
 
@@ -209,6 +194,43 @@ class CameraScreen extends React.Component {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
       console.log(data.uri);
+
+
+      const image = data.uri;
+
+      const Blob = RNFetchBlob.polyfill.Blob
+      const fs = RNFetchBlob.fs
+      window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+      window.Blob = Blob
+   
+     
+      let uploadBlob = null
+      const imageRef = firebase.storage().ref('posts').child("test.jpg")
+      let mime = 'image/jpg'
+      fs.readFile(image, 'base64')
+        .then((data) => {
+          return Blob.build(data, { type: `${mime};BASE64` })
+      })
+      .then((blob) => {
+          uploadBlob = blob
+          return imageRef.put(blob, { contentType: mime })
+        })
+        .then(() => {
+          uploadBlob.close()
+          console.log(imageRef.getDownloadURL);
+          return imageRef.getDownloadURL();
+        })
+        .then((url) => {
+          // URL of the image uploaded on Firebase storage
+          console.log(url);
+          
+        })
+        .catch((error) => {
+          console.log(error);
+   
+        })  
+      
+
       this.props.navigation.push('Learn');
     }
   };
