@@ -1,3 +1,6 @@
+from flask import jsonify
+import random
+
 def hello_get(request):
     """HTTP Cloud Function.
     Args:
@@ -8,4 +11,8 @@ def hello_get(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    return 'Hello World!'
+    random_sign = list('abcdefghijklmnopqrstuvwxyz')
+    random_correct = [True, False]
+
+    return jsonify(sign=random.choice(random_sign),
+                   correct=random.choice(random_correct))
