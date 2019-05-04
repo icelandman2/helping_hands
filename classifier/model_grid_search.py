@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 import numpy as np
-import torchvision
+#import torchvision
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
@@ -34,8 +34,8 @@ data_transforms = {
 
 #data_dir = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/data/'
 #model_output_path = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/classifier/models/resnet18.pt'
-data_dir = '/../data/'
-model_output_folder = '/Team-5/classifier/models/'
+data_dir = '../../data/'
+model_output_folder = '~/Team-5/classifier/exps/'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def imshow(inp, title = None):
@@ -54,7 +54,7 @@ def imshow(inp, title = None):
 # Performs training with specified models and parameters and saves
 # model weights and loss/accuracy to files in models/logs folders
 def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, model_name, model_output_log, num_epochs = 5):
-    model_output_params = model_output_folder + model_name + ".pt"
+    model_output_params = model_output_folder + "models/" + model_name + ".pt"
     
     with open(model_output_log, 'w') as f:
         f.write("\n\n")
@@ -206,8 +206,8 @@ def trainer(model_name, model):
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_conv, step_size = step_size, gamma = gamma)
     num_epochs = 5
 
-    model_output_log = model_output_folder + model_name + ".md"
-    with open(model_output_log, 'w') as f:
+    model_output_log = model_output_folder + "logs/" + model_name + ".md"
+    with open(model_output_log, 'w+') as f:
         f.write("## Experimental Setup \n")
         f.write("{'model_name': " + model_name + "}<br> \n")
         f.write("{'train': " + str(dataset_sizes['train']) + ", 'val': " + str(dataset_sizes['val']) + "}<br> \n")
@@ -263,12 +263,12 @@ def predictor(model):
 # Models to be tested are defined here (PyTorch --> torchvision.models)
 # and passed to trainer()
 def main():
-    models = {'resnet18 pretrained': models.resnet18(pretrained = True), 
-              'resnet18': models.resnet18(pretrained = False),
-              'resnet152': models.resnet152(pretrained = True),
-              'densenet161 pretrained': models.densenet161(pretrained = True),
-              'inception pretrained': models.inception_v3(pretrained=True),
-              'googlenet pretrained': models.googlenet(pretrained=True)}
+    models = {'resnet18 pretrained': torchvision.models.resnet18(pretrained = True), 
+              'resnet18': torchvision.models.resnet18(pretrained = False)}
+              #'resnet152': torchvision.models.resnet152(pretrained = True),
+              #'densenet161 pretrained': torchvision.models.densenet161(pretrained = True),
+              #'inception pretrained': torchvision.models.inception_v3(pretrained=True),
+              #'googlenet pretrained': torchvision.models.googlenet(pretrained=True)}
     for model_name in models:
         print("---- Testing " + model_name + " ----")
         model, acc = trainer(model_name, models[model_name])
