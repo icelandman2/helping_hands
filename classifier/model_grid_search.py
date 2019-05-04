@@ -34,7 +34,7 @@ data_transforms = {
 
 #data_dir = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/data/'
 #model_output_path = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/classifier/models/resnet18.pt'
-data_dir = '/data/'
+data_dir = '/../data/'
 model_output_folder = '/Team-5/classifier/models/'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -50,6 +50,9 @@ def imshow(inp, title = None):
         plt.title(title)
     plt.pause(0.001)  # pause a bit so that plots are updated
 
+
+# Performs training with specified models and parameters and saves
+# model weights and loss/accuracy to files in models/logs folders
 def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, model_name, model_output_log, num_epochs = 5):
     model_output_params = model_output_folder + model_name + ".pt"
     
@@ -168,7 +171,9 @@ def visualize_model(model, num_images = 6):
                     return
         model.train(mode = was_training)
         
-        
+# Parameters for model learning are defined here, including optimizer, 
+# optimizer hyperparameters, learning rates, epochs. Calls train_model()
+# for actual training 
 def trainer(model_name, model):
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) 
                       for x in ['train', 'val']}
@@ -185,13 +190,12 @@ def trainer(model_name, model):
 
     # Parameters of newly constructed modules have requires_grad = True by default
     num_ftrs = model_conv.fc.in_features
-    model_conv.fc = nn.Linear(num_ftrs, len(class_names)) # 2 for cat-dog, 10 for leeds-mosquito
+    model_conv.fc = nn.Linear(num_ftrs, len(class_names))
 
     model_conv = model_conv.to(device)
 
     criterion = nn.CrossEntropyLoss()
 
-    # Observe that only parameters of final layer are being optimized as opposed to before.
     lr = 0.001
     momentum = 0.9
     optimizer_conv = optim.SGD(model_conv.fc.parameters(), lr = lr, momentum = momentum)
@@ -256,11 +260,15 @@ def predictor(model):
         
     return probs_list, preds_list, f1
 
+# Models to be tested are defined here (PyTorch --> torchvision.models)
+# and passed to trainer()
 def main():
     models = {'resnet18 pretrained': models.resnet18(pretrained = True), 
               'resnet18': models.resnet18(pretrained = False),
+              'resnet152': models.resnet152(pretrained = True),
               'densenet161 pretrained': models.densenet161(pretrained = True),
-              'inception': models.inception_v3(pretrained=True)}
+              'inception pretrained': models.inception_v3(pretrained=True),
+              'googlenet pretrained': models.googlenet(pretrained=True)}
     for model_name in models:
         print("---- Testing " + model_name + " ----")
         model, acc = trainer(model_name, models[model_name])
