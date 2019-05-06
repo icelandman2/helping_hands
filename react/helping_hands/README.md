@@ -50,7 +50,10 @@ Basics: https://cloud.google.com/functions/docs/tutorials/http#functions-deploy-
 		https://cloud.google.com/sdk/docs/quickstart-macos 
 
 	2. Deploy Cloud function:
-		gcloud ccurl https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get
+		gcloud functions deploy hello_get --runtime python37 --trigger-http
+
+	3. Curl:
+		
 
 Upload Image to Google Cloud from React Native
 https://medium.com/google-cloud/upload-images-to-google-cloud-storage-with-react-native-and-expressjs-61b8874abc49

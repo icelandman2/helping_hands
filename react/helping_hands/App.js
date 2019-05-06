@@ -29,7 +29,6 @@ class HomeScreen extends React.Component {
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
       .then((response) => response.json())
       .then((responseJson) => {
-
         this.setState({
           dataSource: responseJson.sign,
         }, function(){
