@@ -1,22 +1,24 @@
-What is going through your mind?
-Is this intuitive and easy to follow
+Meeting Notes with Cathy Haas
 
-Best practices for learning sign
-How is learning sign different from learning any other language
-Pedagogy
-Any pain points
+A dictionary would be really helpful, because a lot of students find signs online that aren’t correct and they’ll sign something for “battery” that has nothing to do with battery actually.  We used to have someone working on a dictionary project here a few years ago but they were let go and it hasn’t been worked on since. It would be really helpful to have something like that. 
 
-How do most people practice on their own?
-Practice same set of 5 signs? Practice same set of 20 signs? etc
-Module strategy
-Practice for 5 min? 10 min?
+Expression is a MAJOR component of ASL grammar. Some things online can be wrong, slang, or really inappropriate and they don’t even know it. They could have involuntary insults. Learning from a deaf person is best, since people can be picking up wrong stuff. Very subtle differences in things like 6/W or 1/D depending on a small difference in finger position or hand orientation.
 
+NTID in Rochester, NY and Gallaudet are good resources online for ASL, not Michigan.
+ 
 
-Don’t ask leading questions-do you like this?
+What would you consider some of the biggest difficulties when learning ASL? It depends largely on the individual, people have different struggles — you have to practice and it varies on how fast someone can pick it up. A lot of deaf people have arthritis or don’t sign perfectly but you can usually understand them. Slight differences in placement of your thumb or a finger make a big difference in what you are signing. Young people are starting to sign things differently, for example e, but it is still usable. It’s really important to be clear. 
 
-Contacts to students-this would’ve been so helpfuL?? Vs this was useless bc xyz is better??
+How does the pedagogy look like? ABCs is absolutely where you begin, then basic words from those. Numbers are a little harder to do, to make the shapes on a physical level, so they’re not taught immediately usually, so ABC helps get fluidity in the movement of hands since its new. First we do finger spelling, then basic words related to family, personal information, then maybe numbers. Might just do numbers 1-20 and then move forward if they understand well. 
 
+How do most people practice on their own? My students usually go to office hours for a TA or work with each other. Mixing with the deaf community is usually the quickest way to pick up the language. In the past we did have a deaf community here but most people aren’t close anymore. People might go to an event so they can practice. Some people I invite to class and they can become another model for students or through FaceTime. People usually would prefer this to practicing it on their own because they want to be able to express it to someone. Online there’s some resources to practice like ASL Inside that has some practice programs. Canvas also has homework and different ways of practicing. 
 
-Mandatory to take picture
-Change back button
-Integrate python AI stuff
+It can still be helpful to practice alone with an app or program, but I prefer a deaf person teaching it. 
+
+How useful do you think spaced repetition would be in this setting? Spaced repetition would be helpful, and if the app can tell you if thats wrong and give you a chance to do it again. Great idea to have card shown again if done incorrectly. It would be really fun to do this. I ask students to do it again and again until they do it correctly. 
+
+How long would someone practice on their own at a time? That’s a really good question, and not an easy answer. A first beginning student will really to have to repeat it over and over, you can’t give up and have to keep on trying. It depends on the person. I don’t have a minimum amount of time that would be ideal. Have you taken another language? How long would you want to practice? Order of words in ASL is different in the sentence from English. It can get frustrating for people (long example of enthusiastic student), it requires brain and eye coordination. We can use 3 or 4 signs and do an entire sentence. Some people are really into it and pick it up and others get challenged because it’s not easy. You have to think in ASL, not in English. You have to train your eyes to see things in a different way. For example the tone of your voice in English, might change between I’m happy to see you. So hands change your tone. Facial structure can determine if it’s a statement or a question. Some words are spelled out letter by letter but is speed up in a way that it really becomes its own sign. Might spell it out to put it in bold. Facial expression is important, hand movement (different rules like how much motion you use depending on the letter or word), eye contact, shape of mouth, and body language. 
+
+Do you have other thoughts on how we might want to structure our quiz section, and how that might look different from quizzing in other languages? You might want to try to trick them on things. In the quiz portion, the app could give an incorrect shape and ask the student to check it. Students in class will be like yeah yeah yeah I know and I question them and they won’t have understood anything I’m saying. They’ll laugh when they realize what Ive actually been signing. Might test backwards and they’d have to catch that. A lot of people are thinking in English instead and think it doesn’t make sense, but if they really follow the letters it will be right. 
+
+I think if the app can recognize if the student is doing something incorrectly and show them the correct way, and could show that a finger is too crooked or something this would be most helpful. It would be really good if it could show you what parts of your hand are doing it incorrectly since there are small differences that are important. I would suggest starting with really simple words that are short and use some of the same letters to start with, that would help people catch small differences. 
