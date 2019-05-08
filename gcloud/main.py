@@ -12,6 +12,9 @@ torch.manual_seed(7)
 model_path = '../classifier/exps/models/exp1.pt'
 data_dir = '.......' # this should have a val subdirectory which stores images
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 
+           'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+           'T', 'U', 'V', 'W', 'X', 'Y']
 
 def hello_get(request):
     """HTTP Cloud Function.
@@ -25,10 +28,14 @@ def hello_get(request):
     """
 
     model = torchvision.models.resnet18(pretrained = True)
+    num_ftrs = model.fc.in_features
+    num_classes = len(classes)
+    model.fc = torch.nn.Linear(num_ftrs, num_classes)
     model.load_state_dict(torch.load(model_path))
     image_path = '../team_headshots/andrew.jpeg'
-    predictor(model, image_path)
 
+    prediction = predictor(model, image_path)
+    print(prediction)
 
     random_sign = list('abcdefghijklmnopqrstuvwxyz')
     random_correct = [True, False]
@@ -43,12 +50,6 @@ def predictor(model, image_path):
     # image = data_transforms['val'](image)
     # image.to(device)
 
-    # # run model
-    # with torch.no_grad():
-    #     output = model(image)
-
-    # return output
-
     transformation = transforms.Compose([
         transforms.RandomResizedCrop(224),
         transforms.RandomHorizontalFlip(),
@@ -61,23 +62,9 @@ def predictor(model, image_path):
     if torch.cuda.is_available():
         image_tensor.cuda()
 
-    # input = Variable(image_tensor)
     image_tensor.to(device)
-    output = model(image_tensor)
-    #print(output)
+    with torch.no_grad(): 
+        output = model(image_tensor)
     probs = torch.softmax(output, dim = 1)
-    #print(probs)
     index = output.data.numpy().argmax()
-    #print(index)
-    return index
-
-model = torchvision.models.resnet18(pretrained = True)
-num_ftrs = model.fc.in_features
-num_classes = 34
-model.fc = torch.nn.Linear(num_ftrs, num_classes)
-model.load_state_dict(torch.load(model_path))
-image_path = '../team_headshots/andrew.jpeg'
-predictor(model, image_path)
-
-
-
+    return classes[index]
