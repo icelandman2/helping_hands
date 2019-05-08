@@ -5,9 +5,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 import numpy as np
-#import torchvision
+import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import time
 import os
 import copy
@@ -191,6 +191,7 @@ def trainer(model_name, model):
     # Parameters of newly constructed modules have requires_grad = True by default
     num_ftrs = model_conv.fc.in_features
     model_conv.fc = nn.Linear(num_ftrs, len(class_names))
+    print(len(class_names))
 
     model_conv = model_conv.to(device)
 
