@@ -15,7 +15,7 @@ app.get('/predictor', call_predictor);
 
 function call_predictor(req, res) {
   const spawn = require('child_process').spawn;
-  const ls = spawn('python', ['../main.py']);
+  const ls = spawn('python', ['main.py']); //insert args in list after main.py
 
   ls.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
@@ -28,4 +28,6 @@ function call_predictor(req, res) {
   ls.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
   });
+
+  res.send(200);
 }
