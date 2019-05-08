@@ -198,7 +198,7 @@ class CameraScreen extends React.Component {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
+      console.log("data URI: " + data.uri);
 
       const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -222,7 +222,11 @@ class CameraScreen extends React.Component {
 
     blob.close();
 
-    console.log(snapshot.ref.getDownloadURL());
+    snapshot.ref.getDownloadURL().then(function(downloadURL) {
+      console.log('File available at', downloadURL);
+    });
+    console.log("download URI: " + snapshot.ref.getDownloadURL());
+    console.log("hello!!!!!");
 
     // return await snapshot.ref.getDownloadURL();
 
