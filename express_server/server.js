@@ -1,11 +1,8 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const child_process = require('child_process');
 
-
-//app.get('/', (req, res) => res.send('Hello World!'))
-//Usage: node server.js
-//app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 app.listen(3000, function () {
   console.log('server running on port 3000');
 })
@@ -14,18 +11,20 @@ app.get('/predictor', call_predictor);
 
 
 function call_predictor(req, res) {
-  const spawn = require('child_process').spawn;
-  const ls = spawn('python', ['../main.py']);
-
-  ls.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+  const execFile = child_process.execFile;
+  const f = execFile('/home/gabe84700/Team-5/express_server/venv/bin/python3',  ['../gcloud/main.py', '--file', '../team_headshots/andrew.jpeg'], function(err, stdout, stderr) { 
+    // Node.js will invoke this callback when the 
+    //console.log(stdout); 
   });
 
-  ls.stderr.on('data', (data) => {
-    console.log(`stderr: ${data}`);
+  f.stdout.on('data', function(data) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send({ data: data });
   });
 
-  ls.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
+  f.stderr.on('data', function(data) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send({ data: 'There was an error in predicting what sign was sent' });
+  })
+
 }
