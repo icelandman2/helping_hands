@@ -26,7 +26,7 @@ class HomeScreen extends React.Component {
   }
 
   test_google_cloud() {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test4')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
