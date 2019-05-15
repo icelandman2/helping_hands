@@ -73,3 +73,11 @@ GOOGLE CLOUD FUNCTIONS DON'T WORK WITH REACT NATIVE
 Firebase new start:
 http://nobrok.com/how-to-upload-image-to-firebase-using-react-native/
 
+
+
+Open PT file from URL
+Open image file from URL
+https://stackoverflow.com/questions/7391945/how-do-i-read-image-data-from-a-url-in-python
+
+Enable billing for GCloud?
+

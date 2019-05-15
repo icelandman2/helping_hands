@@ -55,14 +55,6 @@ class HomeScreen extends React.Component {
           })}
         />
 
-          <Button
-          containerStyle={styles.button}
-          title="!!"
-          onPress={() => this.test_google_cloud()}
-        />
-
-
-
         <Button
           containerStyle={styles.button}
           title="Test"
@@ -70,6 +62,16 @@ class HomeScreen extends React.Component {
             type: 'test',
           })}
         />
+
+          <Button
+          containerStyle={styles.button}
+          title="Instructions"
+          onPress={() => this.test_google_cloud()}
+        />
+
+
+
+
 
         
       </View>
@@ -84,7 +86,7 @@ class MenuScreen extends React.Component {
               sectionName: 'alphabet',
               type: 'learn'
             });
-    global.cards_left = ['a', 'b', 'c'];
+    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
     global.total_cards = 26;
 
@@ -166,7 +168,7 @@ class LearnScreen extends React.Component {
 
         <Text>{type}</Text>
         <Text>{sectionName}</Text>
-        <Text>____{global.cards_left.toString()}___</Text>
+        <Text>Cards Left: {global.cards_left.toString()}</Text>
         <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />
         <SwipeCards style={{flex: 1}} />
         
