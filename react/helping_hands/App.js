@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AppRegistry, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
+import { Header } from "native-base";
 import * as Progress from 'react-native-progress';
 
 // import firebase from 'firebase'
@@ -49,17 +49,18 @@ class HomeScreen extends React.Component {
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
         <Button
           containerStyle={styles.button}
-          title="Learn"
-          onPress={() => this.props.navigation.push('Menu', {
-            type: 'learn',
+           title="Learn"
+
+          onPress={() => this.props.navigation.push('LearnMenu', {
+            type: 'Learn',
           })}
         />
 
         <Button
           containerStyle={styles.button}
           title="Test"
-          onPress={() => this.props.navigation.push('Menu', {
-            type: 'test',
+          onPress={() => this.props.navigation.push('TestMenu', {
+            type: 'Test',
           })}
         />
 
@@ -68,23 +69,17 @@ class HomeScreen extends React.Component {
           title="Instructions"
           onPress={() => this.test_google_cloud()}
         />
-
-
-
-
-
-        
       </View>
     );
   }
 }
 
-class MenuScreen extends React.Component {
+class LearnMenuScreen extends React.Component {
 
   pressAlphabet= async function() {
     this.props.navigation.push('Learn', {
               sectionName: 'alphabet',
-              type: 'learn'
+              type: 'Learn'
             });
     global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
@@ -99,7 +94,7 @@ class MenuScreen extends React.Component {
   pressEtiquette= async function() {
     this.props.navigation.push('Learn', {
               sectionName: 'etiquette',
-              type: 'learn'
+              type: 'Learn'
             });
     global.cards_left = ['hello', 'thanks', 'bye'];
     global.curr_cards = 0;
@@ -112,10 +107,63 @@ class MenuScreen extends React.Component {
 
   render() {
     const {navigation} = this.props;
-    const type = navigation.getParam('type', 'learn');
+    const type = navigation.getParam('type', 'Learn');
     return (
       <View style={styles.container}>
-        <Text>{type}</Text>
+        <Text style={styles.headerText}>{type}</Text>
+        <Button
+          containerStyle={styles.button}
+          title="Alphabet"
+          onPress={this.pressAlphabet.bind(this)}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Basic Etiquette"
+          onPress={this.pressEtiquette.bind(this)}
+        />
+      </View>
+    );
+  }
+}
+
+class TestMenuScreen extends React.Component {
+
+  pressAlphabet= async function() {
+    this.props.navigation.push('Test', {
+              sectionName: 'alphabet',
+              type: 'Test'
+            });
+    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.curr_cards = 0;
+    global.total_cards = 26;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+
+  };
+
+  pressEtiquette= async function() {
+    this.props.navigation.push('Test', {
+              sectionName: 'etiquette',
+              type: 'Test'
+            });
+    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.curr_cards = 0;
+    global.total_cards = 3;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+  };
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Learn');
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headerText}>{type}</Text>
         <Button
           containerStyle={styles.button}
           title="Alphabet"
@@ -136,8 +184,11 @@ class LearnScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {progress: 0,
-      indeterminate: true};
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
   }
 
   componentDidMount() {
@@ -159,32 +210,97 @@ class LearnScreen extends React.Component {
 
   render() {
     const {navigation} = this.props;
-    const type = navigation.getParam('type', 'learn');
+    const type = navigation.getParam('type', 'Learn');
     const sectionName = navigation.getParam('sectionName', 'alphabet');
 
 
     return (
       <View style={styles.container}>
-
-        <Text>{type}</Text>
-        <Text>{sectionName}</Text>
-        <Text>Cards Left: {global.cards_left.toString()}</Text>
-        <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>{sectionName}</Text>
+          <Text>Cards Left: {global.cards_left.toString()}</Text>
+          <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+        </View>
         <SwipeCards style={{flex: 1}} />
-        
         <Button
           containerStyle={styles.button}
           title="Check sign"
           onPress={() =>
             this.props.navigation.push('Camera')}
         />
+        <View style={styles.bottomContainerStyle}>
+          <Button
+            containerStyle={styles.button}
+            title="Back to Learn Menu"
+            onPress={() =>
+              this.props.navigation.push('LearnMenu')}
+          />
+        </View>
+      </View>
+    );
+  }
+}
 
+class TestScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
+    console.log(global.cards_left);
+  }
+
+  componentDidMount() {
+    this.animate();
+  }
+
+  animate() {
+    let progress = 0;
+    this.setState({ progress });
+    setTimeout(() => {
+      this.setState({ indeterminate: false });
+      setInterval(() => {
+        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
+        this.setState({ progress });
+      }, 500);
+    }, 1500);
+  }
+
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Test');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
+    return (
+      <View style={styles.container}>
+{/*
+* TODO:: Add container for headers then position that absolutely
+rather than positioning the headers absolutely
+*/}     
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>{sectionName}</Text>
+          <Text>Cards Left: {global.cards_left.toString()}</Text>
+          <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+        </View>          
+        {/*<SwipeCards style={{flex: 1}} />*/}
+        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>        
         <Button
           containerStyle={styles.button}
-          title="Back to Learn Menu"
+          title="Check sign"
           onPress={() =>
-            this.props.navigation.push('Menu')}
-        />
+            this.props.navigation.push('Camera')}/>    
+        <View style={styles.bottomContainerStyle}>
+          <Button
+            containerStyle={styles.button}
+            title="Back to Test Menu"
+            onPress={() =>
+              this.props.navigation.push('TestMenu')}/>
+        </View>              
 
       </View>
     );
@@ -312,9 +428,11 @@ class CameraScreen extends React.Component {
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
-    Menu: MenuScreen,
+    LearnMenu: LearnMenuScreen,
     Learn: LearnScreen,
-    Camera: CameraScreen
+    Camera: CameraScreen,
+    TestMenu: TestMenuScreen,
+    Test: TestScreen
   },
   {
     initialRouteName: "Home"
@@ -331,27 +449,60 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
+  baseText: {
+
+  },
+  topContainerStyle: {
+    position: 'absolute',
+    top: 0,
+    alignItems: "center",
+    justifyContent: "center",    
+  },
+  headerText: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    margin: 25,
+  },
+  subHeaderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 25,
    },
-   button: {
-      padding:10
-   },
-    preview: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: Dimensions.get('window').height,
-      width: Dimensions.get('window').width
-    },
-    capture: {
-      flex: 0,
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      color: '#000',
-      padding: 10,
-      margin: 40  
-    } 
+  testQuestionStyle: {
+    fontSize: 64,
+    fontWeight: 'bold',
+    margin: 25,
+  },
+  bottomContainerStyle: {
+    position: 'absolute',
+    bottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    top: 0,
+    left: 0,
+  },
+  button: {
+    padding:10,
+
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    //alignItems: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    color: '#000',
+    padding: 10,
+    margin: 40  
+  } 
 })
