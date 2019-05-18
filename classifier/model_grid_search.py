@@ -205,7 +205,7 @@ def trainer(model_name, model):
     gamma = 0.1
     step_size = 7
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_conv, step_size = step_size, gamma = gamma)
-    num_epochs = 5
+    num_epochs = 15
 
     model_output_log = model_output_folder + "logs/" + model_name + ".md"
     with open(model_output_log, 'w+') as f:
@@ -264,8 +264,10 @@ def predictor(model):
 # Models to be tested are defined here (PyTorch --> torchvision.models)
 # and passed to trainer()
 def main():
-    models = {'resnet18 pretrained': torchvision.models.resnet18(pretrained = True), 
-              'resnet18': torchvision.models.resnet18(pretrained = False)}
+    models = {'googlenet-pretrained': torchvision.models.googlenet(pretrained = True),
+              'googlenet': torchvision.models.googlenet(pretrained = False)}
+              # 'resnet18-pretrained': torchvision.models.resnet18(pretrained = True), 
+              # 'resnet18': torchvision.models.resnet18(pretrained = False),
               #'resnet152': torchvision.models.resnet152(pretrained = True),
               #'densenet161 pretrained': torchvision.models.densenet161(pretrained = True),
               #'inception pretrained': torchvision.models.inception_v3(pretrained=True),
