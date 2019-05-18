@@ -51,6 +51,7 @@ def hello_get(request):
         
 
         model.load_state_dict(torch.load(model_path))
+        model.eval()
         options = vars(parser.parse_args())
         if options['file']:
             image_path = options['file'].name
