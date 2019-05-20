@@ -16,9 +16,19 @@ import SwipeCards from './SwipeCards.js'
 import uuid from 'uuid';
 // import Environment from './config/environment';
 import firebase from './config/firebase';
+import images from './img';
 
+/*
+ * TODO :: Add main menu button to the test screen
+ AND remove çorrect checked sign from global vars for test module and increment the progress bar
+ remove check sign for remove
+ Put views into different files
+ THEN - Tina is going to integrate the model's prediction with the app
+ after each "check sign," go to evaluation screen
+ give immediate feedback on each testing question
+ after getting sequential questions to work, add random test questions and integrate learning manager
 
-
+*/
 class HomeScreen extends React.Component {
   constructor(props){
     super(props);
@@ -63,11 +73,12 @@ class HomeScreen extends React.Component {
             type: 'Test',
           })}
         />
-
-          <Button
+        <Button
           containerStyle={styles.button}
           title="Instructions"
-          onPress={() => this.test_google_cloud()}
+          onPress={() => this.props.navigation.push('Instructions', {
+            type: 'Instructions',
+          })}
         />
       </View>
     );
@@ -75,10 +86,9 @@ class HomeScreen extends React.Component {
 }
 
 class LearnMenuScreen extends React.Component {
-
   pressAlphabet= async function() {
     this.props.navigation.push('Learn', {
-              sectionName: 'alphabet',
+              sectionName: 'Alphabet',
               type: 'Learn'
             });
     global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
@@ -88,12 +98,11 @@ class LearnMenuScreen extends React.Component {
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
-
   };
 
   pressEtiquette= async function() {
     this.props.navigation.push('Learn', {
-              sectionName: 'etiquette',
+              sectionName: 'Etiquette',
               type: 'Learn'
             });
     global.cards_left = ['hello', 'thanks', 'bye'];
@@ -211,7 +220,7 @@ class LearnScreen extends React.Component {
   render() {
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'Learn');
-    const sectionName = navigation.getParam('sectionName', 'alphabet');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
 
 
     return (
@@ -222,14 +231,16 @@ class LearnScreen extends React.Component {
           <Text>Cards Left: {global.cards_left.toString()}</Text>
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>
-        <SwipeCards style={{flex: 1}} />
-        <Button
-          containerStyle={styles.button}
-          title="Check sign"
-          onPress={() =>
-            this.props.navigation.push('Camera')}
-        />
+        <Text>Practice Signing:</Text>
+        <SwipeCards style={styles.swipeCardsStyle}/>
+
         <View style={styles.bottomContainerStyle}>
+          <Text style={{width:300, textAlign: "center"}}>When you're ready, check your progress by pressing the button and submitting an image!</Text>
+          <Button
+            containerStyle={styles.button}
+            title="Check sign"
+            onPress={() =>
+              this.props.navigation.push('Camera')}/>         
           <Button
             containerStyle={styles.button}
             title="Back to Learn Menu"
@@ -277,10 +288,6 @@ class TestScreen extends React.Component {
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
     return (
       <View style={styles.container}>
-{/*
-* TODO:: Add container for headers then position that absolutely
-rather than positioning the headers absolutely
-*/}     
         <View style={styles.topContainerStyle}>
           <Text style={styles.headerText}>{type}</Text>
           <Text style={styles.subHeaderText}>{sectionName}</Text>
@@ -288,15 +295,17 @@ rather than positioning the headers absolutely
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>          
         {/*<SwipeCards style={{flex: 1}} />*/}
-        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>        
+        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>  
+        <Text>When you're ready, check your knowledge by pressing the button and submitting a photo!</Text>      
         <Button
-          containerStyle={styles.button}
+          containerStyle={styles.checkButton}
           title="Check sign"
           onPress={() =>
             this.props.navigation.push('Camera')}/>    
+{/*TODO:: get this button's position to function properly with*/}            
         <View style={styles.bottomContainerStyle}>
           <Button
-            containerStyle={styles.button}
+            containerStyle={styles.checkButton}
             title="Back to Test Menu"
             onPress={() =>
               this.props.navigation.push('TestMenu')}/>
@@ -384,7 +393,7 @@ class CameraScreen extends React.Component {
       //   })  
       
 
-      this.props.navigation.push('Learn');
+      this.props.navigation.pop();
     }
   };
 
@@ -425,14 +434,59 @@ class CameraScreen extends React.Component {
   }
 }
 
+class InstructionsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
+  }
+
+  componentDidMount() {
+    this.animate();
+  }
+
+  animate() {
+    let progress = 0;
+    this.setState({ progress });
+    setTimeout(() => {
+      this.setState({ indeterminate: false });
+      setInterval(() => {
+        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
+        this.setState({ progress });
+      }, 500);
+    }, 1500);
+  }
+
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Instructions');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>This view will provide the answers to frequently asked questions as well as general how-tos for the Helping Hands application.            
+          </Text>
+        </View>                
+      </View>
+    );
+  }
+}
+
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
+    Instructions: InstructionsScreen,
     LearnMenu: LearnMenuScreen,
     Learn: LearnScreen,
     Camera: CameraScreen,
     TestMenu: TestMenuScreen,
-    Test: TestScreen
+    Test: TestScreen,
   },
   {
     initialRouteName: "Home"
@@ -466,8 +520,13 @@ const styles = StyleSheet.create({
   subHeaderText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 25,
+    marginBottom: 20,
    },
+  swipeCardsStyle: {
+    flex: 1,
+    height: 100,
+    zIndex: -1,
+  },
   testQuestionStyle: {
     fontSize: 64,
     fontWeight: 'bold',
@@ -485,10 +544,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     top: 0,
     left: 0,
+    textAlign: 'center',
+    // backgroundColor: '#e9ebee',
   },
   button: {
     padding:10,
-
+  },
+  checkButton: {
+    padding: 10, 
+    width: 300,
   },
   preview: {
     flex: 1,
@@ -504,5 +568,5 @@ const styles = StyleSheet.create({
     color: '#000',
     padding: 10,
     margin: 40  
-  } 
+  },
 })
