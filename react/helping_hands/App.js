@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AppRegistry, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
+import { Header } from "native-base";
 import * as Progress from 'react-native-progress';
 
 // import firebase from 'firebase'
@@ -16,9 +16,19 @@ import SwipeCards from './SwipeCards.js'
 import uuid from 'uuid';
 // import Environment from './config/environment';
 import firebase from './config/firebase';
+import images from './img';
 
+/*
+ * TODO :: Add main menu button to the test screen
+ AND remove çorrect checked sign from global vars for test module and increment the progress bar
+ remove check sign for remove
+ Put views into different files
+ THEN - Tina is going to integrate the model's prediction with the app
+ after each "check sign," go to evaluation screen
+ give immediate feedback on each testing question
+ after getting sequential questions to work, add random test questions and integrate learning manager
 
-
+*/
 class HomeScreen extends React.Component {
   constructor(props){
     super(props);
@@ -49,42 +59,37 @@ class HomeScreen extends React.Component {
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
         <Button
           containerStyle={styles.button}
-          title="Learn"
-          onPress={() => this.props.navigation.push('Menu', {
-            type: 'learn',
+           title="Learn"
+
+          onPress={() => this.props.navigation.push('LearnMenu', {
+            type: 'Learn',
           })}
         />
 
         <Button
           containerStyle={styles.button}
           title="Test"
-          onPress={() => this.props.navigation.push('Menu', {
-            type: 'test',
+          onPress={() => this.props.navigation.push('TestMenu', {
+            type: 'Test',
           })}
         />
-
-          <Button
+        <Button
           containerStyle={styles.button}
           title="Instructions"
-          onPress={() => this.test_google_cloud()}
+          onPress={() => this.props.navigation.push('Instructions', {
+            type: 'Instructions',
+          })}
         />
-
-
-
-
-
-        
       </View>
     );
   }
 }
 
-class MenuScreen extends React.Component {
-
+class LearnMenuScreen extends React.Component {
   pressAlphabet= async function() {
     this.props.navigation.push('Learn', {
-              sectionName: 'alphabet',
-              type: 'learn'
+              sectionName: 'Alphabet',
+              type: 'Learn'
             });
     global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
@@ -93,13 +98,12 @@ class MenuScreen extends React.Component {
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
-
   };
 
   pressEtiquette= async function() {
     this.props.navigation.push('Learn', {
-              sectionName: 'etiquette',
-              type: 'learn'
+              sectionName: 'Etiquette',
+              type: 'Learn'
             });
     global.cards_left = ['hello', 'thanks', 'bye'];
     global.curr_cards = 0;
@@ -112,10 +116,63 @@ class MenuScreen extends React.Component {
 
   render() {
     const {navigation} = this.props;
-    const type = navigation.getParam('type', 'learn');
+    const type = navigation.getParam('type', 'Learn');
     return (
       <View style={styles.container}>
-        <Text>{type}</Text>
+        <Text style={styles.headerText}>{type}</Text>
+        <Button
+          containerStyle={styles.button}
+          title="Alphabet"
+          onPress={this.pressAlphabet.bind(this)}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Basic Etiquette"
+          onPress={this.pressEtiquette.bind(this)}
+        />
+      </View>
+    );
+  }
+}
+
+class TestMenuScreen extends React.Component {
+
+  pressAlphabet= async function() {
+    this.props.navigation.push('Test', {
+              sectionName: 'alphabet',
+              type: 'Test'
+            });
+    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.curr_cards = 0;
+    global.total_cards = 26;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+
+  };
+
+  pressEtiquette= async function() {
+    this.props.navigation.push('Test', {
+              sectionName: 'etiquette',
+              type: 'Test'
+            });
+    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.curr_cards = 0;
+    global.total_cards = 3;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+  };
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Learn');
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headerText}>{type}</Text>
         <Button
           containerStyle={styles.button}
           title="Alphabet"
@@ -136,8 +193,11 @@ class LearnScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {progress: 0,
-      indeterminate: true};
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
   }
 
   componentDidMount() {
@@ -159,32 +219,97 @@ class LearnScreen extends React.Component {
 
   render() {
     const {navigation} = this.props;
-    const type = navigation.getParam('type', 'learn');
-    const sectionName = navigation.getParam('sectionName', 'alphabet');
+    const type = navigation.getParam('type', 'Learn');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
 
 
     return (
       <View style={styles.container}>
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>{sectionName}</Text>
+          <Text>Cards Left: {global.cards_left.toString()}</Text>
+          <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+        </View>
+        <Text>Practice Signing:</Text>
+        <SwipeCards style={styles.swipeCardsStyle}/>
 
-        <Text>{type}</Text>
-        <Text>{sectionName}</Text>
-        <Text>Cards Left: {global.cards_left.toString()}</Text>
-        <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />
-        <SwipeCards style={{flex: 1}} />
-        
+        <View style={styles.bottomContainerStyle}>
+          <Text style={{width:300, textAlign: "center"}}>When you're ready, check your progress by pressing the button and submitting an image!</Text>
+          <Button
+            containerStyle={styles.button}
+            title="Check sign"
+            onPress={() =>
+              this.props.navigation.push('Camera')}/>         
+          <Button
+            containerStyle={styles.button}
+            title="Back to Learn Menu"
+            onPress={() =>
+              this.props.navigation.push('LearnMenu')}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+
+class TestScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
+    console.log(global.cards_left);
+  }
+
+  componentDidMount() {
+    this.animate();
+  }
+
+  animate() {
+    let progress = 0;
+    this.setState({ progress });
+    setTimeout(() => {
+      this.setState({ indeterminate: false });
+      setInterval(() => {
+        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
+        this.setState({ progress });
+      }, 500);
+    }, 1500);
+  }
+
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Test');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>{sectionName}</Text>
+          <Text>Cards Left: {global.cards_left.toString()}</Text>
+          <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+        </View>          
+        {/*<SwipeCards style={{flex: 1}} />*/}
+        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>  
+        <Text>When you're ready, check your knowledge by pressing the button and submitting a photo!</Text>      
         <Button
-          containerStyle={styles.button}
+          containerStyle={styles.checkButton}
           title="Check sign"
           onPress={() =>
-            this.props.navigation.push('Camera')}
-        />
-
-        <Button
-          containerStyle={styles.button}
-          title="Back to Learn Menu"
-          onPress={() =>
-            this.props.navigation.push('Menu')}
-        />
+            this.props.navigation.push('Camera')}/>    
+{/*TODO:: get this button's position to function properly with*/}            
+        <View style={styles.bottomContainerStyle}>
+          <Button
+            containerStyle={styles.checkButton}
+            title="Back to Test Menu"
+            onPress={() =>
+              this.props.navigation.push('TestMenu')}/>
+        </View>              
 
       </View>
     );
@@ -268,7 +393,7 @@ class CameraScreen extends React.Component {
       //   })  
       
 
-      this.props.navigation.push('Learn');
+      this.props.navigation.pop();
     }
   };
 
@@ -309,12 +434,59 @@ class CameraScreen extends React.Component {
   }
 }
 
+class InstructionsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = 
+    {
+      progress: 0,
+      indeterminate: true
+    };
+  }
+
+  componentDidMount() {
+    this.animate();
+  }
+
+  animate() {
+    let progress = 0;
+    this.setState({ progress });
+    setTimeout(() => {
+      this.setState({ indeterminate: false });
+      setInterval(() => {
+        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
+        this.setState({ progress });
+      }, 500);
+    }, 1500);
+  }
+
+
+  render() {
+    const {navigation} = this.props;
+    const type = navigation.getParam('type', 'Instructions');
+    const sectionName = navigation.getParam('sectionName', 'Alphabet');
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainerStyle}>
+          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.subHeaderText}>This view will provide the answers to frequently asked questions as well as general how-tos for the Helping Hands application.            
+          </Text>
+        </View>                
+      </View>
+    );
+  }
+}
+
 const AppNavigator = createStackNavigator(
   {
     Home: HomeScreen,
-    Menu: MenuScreen,
+    Instructions: InstructionsScreen,
+    LearnMenu: LearnMenuScreen,
     Learn: LearnScreen,
-    Camera: CameraScreen
+    Camera: CameraScreen,
+    TestMenu: TestMenuScreen,
+    Test: TestScreen,
   },
   {
     initialRouteName: "Home"
@@ -331,27 +503,70 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
+  baseText: {
+
+  },
+  topContainerStyle: {
+    position: 'absolute',
+    top: 0,
+    alignItems: "center",
+    justifyContent: "center",    
+  },
+  headerText: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    margin: 25,
+  },
+  subHeaderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
    },
-   button: {
-      padding:10
-   },
-    preview: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: Dimensions.get('window').height,
-      width: Dimensions.get('window').width
-    },
-    capture: {
-      flex: 0,
-      backgroundColor: '#fff',
-      borderRadius: 5,
-      color: '#000',
-      padding: 10,
-      margin: 40  
-    } 
+  swipeCardsStyle: {
+    flex: 1,
+    height: 100,
+    zIndex: -1,
+  },
+  testQuestionStyle: {
+    fontSize: 64,
+    fontWeight: 'bold',
+    margin: 25,
+  },
+  bottomContainerStyle: {
+    position: 'absolute',
+    bottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    top: 0,
+    left: 0,
+    textAlign: 'center',
+    // backgroundColor: '#e9ebee',
+  },
+  button: {
+    padding:10,
+  },
+  checkButton: {
+    padding: 10, 
+    width: 300,
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    //alignItems: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    color: '#000',
+    padding: 10,
+    margin: 40  
+  },
 })
