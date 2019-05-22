@@ -5,9 +5,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 import numpy as np
-#import torchvision
+import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import time
 import os
 import copy
@@ -181,24 +181,27 @@ def trainer(model_name, model):
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size = batch_size, shuffle = True, num_workers = 16)
                    for x in ['train', 'val']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-    print(dataset_sizes)
     class_names = image_datasets['train'].classes
 
     model_conv = model
     for param in model_conv.parameters():
         param.requires_grad = False
 
-    # Parameters of newly constructed modules have requires_grad = True by default
-    num_ftrs = model_conv.fc.in_features
-    model_conv.fc = nn.Linear(num_ftrs, len(class_names))
-
-    model_conv = model_conv.to(device)
-
-    criterion = nn.CrossEntropyLoss()
-
     lr = 0.001
     momentum = 0.9
-    optimizer_conv = optim.SGD(model_conv.fc.parameters(), lr = lr, momentum = momentum)
+
+    # Parameters of newly constructed modules have requires_grad = True by default
+    if model_name[:6] == 'resnet' or model_name[:9] == 'inception' or model_name[:9] == 'googlenet':
+        num_ftrs = model_conv.fc.in_features
+        model_conv.fc = nn.Linear(num_ftrs, len(class_names))
+        optimizer_conv = optim.SGD(model_conv.fc.parameters(), lr = lr, momentum = momentum)
+    elif model_name[:8] == 'densenet':
+        num_ftrs = model_conv.classifier.in_features
+        model_conv.classifier = nn.Linear(num_ftrs, len(class_names))
+        optimizer_conv = optim.SGD(model_conv.classifier.parameters(), lr = lr, momentum = momentum)
+
+    model_conv = model_conv.to(device)
+    criterion = nn.CrossEntropyLoss()
 
     # Decay LR by a factor of 0.1 every 7 epochs
     gamma = 0.1
@@ -263,10 +266,10 @@ def predictor(model):
 # Models to be tested are defined here (PyTorch --> torchvision.models)
 # and passed to trainer()
 def main():
-    models = {'resnet18 pretrained': torchvision.models.resnet18(pretrained = True), 
-              'resnet18': torchvision.models.resnet18(pretrained = False)}
+    models = {#'resnet18 pretrained': torchvision.models.resnet18(pretrained = True), 
+              #'resnet18': torchvision.models.resnet18(pretrained = False)}
               #'resnet152': torchvision.models.resnet152(pretrained = True),
-              #'densenet161 pretrained': torchvision.models.densenet161(pretrained = True),
+              'densenet161 pretrained': torchvision.models.densenet161(pretrained = True)}
               #'inception pretrained': torchvision.models.inception_v3(pretrained=True),
               #'googlenet pretrained': torchvision.models.googlenet(pretrained=True)}
     for model_name in models:
