@@ -12,10 +12,23 @@ import images from "./img"
 class Card extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state ={ hitOnce: true, magic: global.magic}
+
+    global.magic = global.magic + 1;
+
+
   }
 
   setGlobal() {
-    global.current_name = this.props.name;
+    console.log(">>>>", this.props.name);
+    console.log("magic", this.state.magic);
+    if (this.state.hitOnce) {
+      global.current_sign = this.props.name;
+      console.log("why????", global.current_sign);
+      this.state.hitOnce = false;
+    }
+
   }
 
   render() {
