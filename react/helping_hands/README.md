@@ -17,6 +17,12 @@ npm install react-native-camera --save
 
 react-native link react-native-camera
 
+npm install react-native-image-picker --save
+react-native link react-native-image-picker
+
+npm --save install firebase
+
+npm install --save rn-fetch-blob
 
 Basic React Native tutorials:
 https://facebook.github.io/react-native/docs/tutorial
@@ -44,7 +50,10 @@ Basics: https://cloud.google.com/functions/docs/tutorials/http#functions-deploy-
 		https://cloud.google.com/sdk/docs/quickstart-macos 
 
 	2. Deploy Cloud function:
-		gcloud ccurl https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get
+		gcloud functions deploy hello_get --runtime python37 --trigger-http
+
+	3. Curl:
+		
 
 Upload Image to Google Cloud from React Native
 https://medium.com/google-cloud/upload-images-to-google-cloud-storage-with-react-native-and-expressjs-61b8874abc49
@@ -55,4 +64,20 @@ https://cloud.google.com/functions/docs/tutorials/imagemagick
 
 Binding???
 https://medium.com/shoutem/react-to-bind-or-not-to-bind-7bf58327e22a
+
+Authentication:
+https://cloud.google.com/docs/authentication/getting-started
+
+GOOGLE CLOUD FUNCTIONS DON'T WORK WITH REACT NATIVE
+
+Firebase new start:
+http://nobrok.com/how-to-upload-image-to-firebase-using-react-native/
+
+
+
+Open PT file from URL
+Open image file from URL
+https://stackoverflow.com/questions/7391945/how-do-i-read-image-data-from-a-url-in-python
+
+Enable billing for GCloud?
 
