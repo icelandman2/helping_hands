@@ -16,7 +16,8 @@ import argparse
 import sys
 
 torch.manual_seed(7)
-model_path = 'exp1.pt'
+model_path = '../classifier/exps/models/exp1.pt'
+model_path = "exp1.pt"
 data_dir = '.......' # this should have a val subdirectory which stores images
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 
@@ -27,7 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--file', type=argparse.FileType('r'), help='PASS A FILE')
 
 
-def hello_get(request):
+def sign_prediction(request):
 
     app=Flask(__name__)
     with app.app_context():
@@ -51,12 +52,26 @@ def hello_get(request):
         
 
         model.load_state_dict(torch.load(model_path))
-        options = vars(parser.parse_args())
-        if options['file']:
-            image_path = options['file'].name
-        else:
-            image_path = '../team_headshots/matt.jpg'
-        prediction = predictor(model, image_path)
+        model.eval()
+        # options = vars(parser.parse_args())
+        # if options['file']:
+        #     image_path = options['file'].name
+        # else:
+        #     image_path = '../team_headshots/matt.jpg'
+
+        link1 = "https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/"
+        link2 = "?alt=media&token="
+       
+        
+        request_json = request.get_json(silent=True)
+        request_args = request.args
+        
+        image_url = request_json['image_url']
+        token = request_json['token']
+       
+        
+        final_link = link1+image_url+link2+token
+        prediction = predictor(model, final_link)
         print(prediction)
 
         random_sign = list('abcdefghijklmnopqrstuvwxyz')
@@ -68,10 +83,15 @@ def hello_get(request):
 
 def predictor(model, image_path):
     # load image
-    image_url = "https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/fd65f241-a21f-47a1-9959-5c26d6957237?alt=media&token=a729a2de-2609-4984-9d1b-20febb9dce1f"
+
+    # image_url = "https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/fd65f241-a21f-47a1-9959-5c26d6957237?alt=media&token=a729a2de-2609-4984-9d1b-20febb9dce1f"
     # image_url = "https://www.lifeprint.com/asl101/signjpegs/l/l.jpg"
-    response = requests.get(image_url)
+    # # image_url = "https://images2.pics4learning.com/catalog/b/b.jpg"
+    # image_url = "https://images2.pics4learning.com/catalog/a/a.jpg"
+    response = requests.get(image_path)
     image = Image.open(BytesIO(response.content))
+
+
 
     # image = Image.open(image_path)
 
@@ -98,5 +118,9 @@ def predictor(model, image_path):
     return classes[index]
 
 
-dummy='stasd'
-hello_get(dummy)    
+# dummy={    
+#   "image_url": "30604346-b28f-4c64-bb1f-64548f16f96f",
+#   "token": "x83ff2d78-5bab-4e39-8908-174536f613de"
+# }
+
+# sign_prediction(dummy)    
