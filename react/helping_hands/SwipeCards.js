@@ -85,10 +85,17 @@ export default class extends React.Component {
     global.curr_cards = global.curr_cards+1;
   }
   handleNope (card) {
+    console.log(global.cards_left);
     global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.not_learned.push(card.name);
     global.curr_cards = global.curr_cards+1;
+    //this.props.parentHandleNope(card);
   }
+
+  // parentHandleNope (card) {
+  //   this.state.cards.push(card.name);
+  // }
+
   handleMaybe (card) {
     global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.maybe_learned.push(card.name);
@@ -99,7 +106,8 @@ export default class extends React.Component {
     return (
       <SwipeCards
         cards={this.state.cards}
-        renderCard={(cardData) => <Card {...cardData} />}
+        // renderCard={(cardData) => <Card method={this.parentHandleNope} {...cardData} />}
+        renderCard={(cardData) => <Card {...cardData} />}        
         renderNoMoreCards={() => <NoMoreCards />}
 
         handleYup={this.handleYup}
