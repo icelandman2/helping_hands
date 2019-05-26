@@ -235,14 +235,9 @@ class LearnScreen extends React.Component {
         <SwipeCards style={styles.swipeCardsStyle}/>
 
         <View style={styles.bottomContainerStyle}>
-          <Text style={{width:300, textAlign: "center"}}>When you're ready, check your progress by pressing the button and submitting an image!</Text>
+          <Text style={{width:300, textAlign: "center"}}>Swipe right when you're done learning a sign. Swipe left to do more learning later.</Text>                 
           <Button
-            containerStyle={styles.button}
-            title="Check sign"
-            onPress={() =>
-              this.props.navigation.push('Camera')}/>         
-          <Button
-            containerStyle={styles.button}
+            containerStyle={styles.checkButton}
             title="Back to Learn Menu"
             onPress={() =>
               this.props.navigation.push('LearnMenu')}
