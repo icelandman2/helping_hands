@@ -15,6 +15,8 @@ npm install react-native-progress --save
 
 npm install react-native-camera --save
 
+npm install native-base --save
+
 react-native link react-native-camera
 
 npm install react-native-image-picker --save
@@ -81,3 +83,12 @@ https://stackoverflow.com/questions/7391945/how-do-i-read-image-data-from-a-url-
 
 Enable billing for GCloud?
 
+POST JSON request from React Native
+http://androidseekho.com/others/reactnative/how-to-make-post-json-request-api-call-in-react-native/
+
+
+https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/30604346-b28f-4c64-bb1f-64548f16f96f?alt=media&token=83ff2d78-5bab-4e39-8908-174536f613de
+
+https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/795d4374-ebf0-4255-9817-ec4494a1757d?alt=media&token=ce95e116-91a5-4df2-b1d3-164968500010
+
+https://firebasestorage.googleapis.com/v0/b/helping-hands-cs194.appspot.com/o/4b7a9ffc-6e6b-4eac-b13e-042de2d12b44?alt=media&token=c8443750-1ee2-4d25-84a5-47c8ad788f00

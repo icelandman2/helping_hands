@@ -36,7 +36,17 @@ class HomeScreen extends React.Component {
   }
 
   test_google_cloud() {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/hello_get')
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
+        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
+      }),
+      })
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -80,6 +90,12 @@ class HomeScreen extends React.Component {
             type: 'Instructions',
           })}
         />
+
+        <Button
+          containerStyle={styles.button}
+          title="Test"
+          onPress={() => this.test_google_cloud()}
+        />
       </View>
     );
   }
@@ -91,7 +107,8 @@ class LearnMenuScreen extends React.Component {
               sectionName: 'Alphabet',
               type: 'Learn'
             });
-    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.cards_left = ['a', 'b', 'c', 'd', 'p'];
+    // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
     global.total_cards = 26;
 
@@ -130,6 +147,12 @@ class LearnMenuScreen extends React.Component {
           containerStyle={styles.button}
           title="Basic Etiquette"
           onPress={this.pressEtiquette.bind(this)}
+        />
+
+        <Button
+          containerStyle={styles.button}
+          title="Main Menu"
+          onPress={() => this.props.navigation.push('Home')}
         />
       </View>
     );
@@ -222,6 +245,9 @@ class LearnScreen extends React.Component {
     const type = navigation.getParam('type', 'Learn');
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
 
+    global.type = type;
+    global.section_name = sectionName;
+
 
     return (
       <View style={styles.container}>
@@ -231,7 +257,7 @@ class LearnScreen extends React.Component {
           <Text>Cards Left: {global.cards_left.toString()}</Text>
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>
-        <Text>Practice Signing:</Text>
+        <Text>Current card: {global.current_sign}</Text>
         <SwipeCards style={styles.swipeCardsStyle}/>
 
         <View style={styles.bottomContainerStyle}>
@@ -314,9 +340,16 @@ class TestScreen extends React.Component {
 class CameraScreen extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = 
+    {
+      prediction: "default",
+    };
   }
 
   takePicture = async function() {
+    var nav = this.props.navigation;
+
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
@@ -344,11 +377,71 @@ class CameraScreen extends React.Component {
 
     blob.close();
 
+
     snapshot.ref.getDownloadURL().then(function(downloadURL) {
       console.log('File available at', downloadURL);
+
+      var image_url = (downloadURL.split("/")[7]).split("?")[0];
+      var token = downloadURL.split("=")[2];
+
+      var prediction = "DEFAULT";
+
+      console.log('Image URL:', image_url);
+      console.log('Token:', token);
+
+      fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
+        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
+      }),
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        nav.push('Results', {
+            prediction: responseJson.sign,
+          });
+
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+
+      // fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //       'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     image_url: image_url,
+      //     token: token,
+      //   }),
+      //   })
+      // .then((response) => response.json())
+      // .then((responseJson) => {
+      //   this.setState({
+      //     prediction: responseJson.sign,
+      //   }, function(){
+
+      //   });
+
+      // })
+      //   .catch((error) =>{
+      //     console.error(error);
+      //   });
+
+        
     });
     console.log("download URI: " + snapshot.ref.getDownloadURL());
     console.log("hello!!!!!");
+    
+
 
     // return await snapshot.ref.getDownloadURL();
 
@@ -387,8 +480,9 @@ class CameraScreen extends React.Component {
    
       //   })  
       
-
-      this.props.navigation.pop();
+    // this.props.navigation.push('Results', {
+    //         prediction: 'a',
+    //       })
     }
   };
 
@@ -427,6 +521,57 @@ class CameraScreen extends React.Component {
       </View>
     );
   }
+}
+
+class ResultsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  goBackToSigns= async function() {
+    this.props.navigation.push(global.type, {
+              sectionName: global.section_name,
+              type: global.type
+            });
+    global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
+
+    global.curr_cards = global.curr_cards+1;
+
+  };
+        
+
+  render() {
+    const {navigation} = this.props;
+    const prediction = navigation.getParam('prediction', 'default');
+
+    var check = "";
+    if (prediction==(global.current_sign).toUpperCase()) {
+      check = "Correct :)"
+      global.learned.push(global.current_sign);
+
+    } else {
+      check = "Incorrect :("
+      global.not_learned.push(global.current_sign);
+    }
+    return (
+      <View style={styles.container}>
+        <Text>{check}</Text>
+        <Text>Correct sign: {global.current_sign.toUpperCase()}</Text>
+
+        <Image source={images[global.current_sign]} 
+           style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
+
+        <Text>You signed: {prediction}</Text>
+        <Button
+          containerStyle={styles.button}
+          title="Continue"
+          onPress={this.goBackToSigns.bind(this)}
+        />
+
+      </View>
+    );
+  }
+
 }
 
 class InstructionsScreen extends React.Component {
@@ -482,6 +627,7 @@ const AppNavigator = createStackNavigator(
     Camera: CameraScreen,
     TestMenu: TestMenuScreen,
     Test: TestScreen,
+    Results: ResultsScreen,
   },
   {
     initialRouteName: "Home"
