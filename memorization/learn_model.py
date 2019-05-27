@@ -80,7 +80,7 @@ class LearningManager:
 			u_tuple = (copy.deepcopy(self.map), [])
 			self.user_data.append(u_tuple)
 
-	def hardness_update_for_user(self, user, target_accuracy=.85, min_total_data=100):
+	def hardness_update_for_user(self, user, target_accuracy=.85, min_total_data=1):
 		"""
 		Examine the user's current performance on the tokens they are trying to learn, and suggest update to the ease
 		and penalty bounds based on their learning characteristics. Returns -1 if insufficient data.
@@ -92,7 +92,12 @@ class LearningManager:
 		"""
 		correct = 0
 		allV = 0
-		user_map, user_shuf = self.user_data[user]
+		user_index = self.check_valid_user(user)
+		if user_index == -1:
+			return user_index
+
+		#ERROR DO NOT USE FOR NOW
+		user_map, user_shuf = list(self.user_data[user_index])
 		for tok in user_map:
 			acc, corr, alltoks = self.get_accuracy(user, tok)
 			correct += corr
@@ -154,9 +159,9 @@ class LearningManager:
 		cur_map, state = list(self.user_data[user_index])
 		t, r, correct, allV, e = cur_map[token]
 		if allV==0:
-			return 0.0
+			return (0.0, 0, 0)
 		accuracy = float(correct) / float(allV)
-		return accuracy, correct, allV
+		return (accuracy, correct, allV)
 
 	def get_init_recall_time(self):
 		"""
@@ -485,8 +490,8 @@ def test_learningManager(skip_long=False):
 	accuracy_test.update_knowledge(1, [1])
 	assert accuracy_test.get_accuracy(1, "a")[0] == 0.5, "wrong updated accuracy"
 	print("get/set checks passed!")
-
+	print(newV.hardness_update_for_user(3))
 	print("\nall tests passed!")
 
 if __name__ == '__main__':
-    test_learningManager(skip_long=False)
+    test_learningManager(skip_long=True)
