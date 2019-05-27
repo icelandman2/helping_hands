@@ -80,6 +80,46 @@ class LearningManager:
 			u_tuple = (copy.deepcopy(self.map), [])
 			self.user_data.append(u_tuple)
 
+	def hardness_update_for_user(self, user, target_accuracy=.85, min_total_data=1):
+		"""
+		Examine the user's current performance on the tokens they are trying to learn, and suggest update to the ease
+		and penalty bounds based on their learning characteristics. Returns -1 if insufficient data.
+		@param user: The user to evaluate
+		@param target_accuracy: Desired average accuracy
+		@param min_total_data: The minimum number of cards attempted (in total) before accuracy adjustment starts
+		@return nonadjust: The percentage of nonadjustable values due to low or high accuracy. Consider modifying min
+		or max ease if you get this value.
+		"""
+		correct = 0
+		allV = 0
+		user_index = self.check_valid_user(user)
+		if user_index == -1:
+			return user_index
+
+		#ERROR DO NOT USE FOR NOW
+		user_map, user_shuf = list(self.user_data[user_index])
+		for tok in user_map:
+			acc, corr, alltoks = self.get_accuracy(user, tok)
+			correct += corr
+			allV += alltoks
+		if allV < min_total_data:
+			return -1
+
+		tot_score = float(correct) / float(allV)
+		count_tok = 0
+		count_nonadjustable = 0
+		for tok in user_map:
+			count_tok += 1
+			loc = user_map[tok]
+			new_val = (tot_score/target_accuracy)*loc[4]
+			loc[4] = max(min(new_val, self.max_ease), self.min_ease)
+			if new_val > self.max_ease or new_val < self.min_ease:
+				count_nonadjustable += 1
+			user_map[tok] = loc
+		return float(count_nonadjustable)/float(count_tok)
+
+
+
 	def retrieve_shuffled_state(self, user):
 		"""
 		Get the current shuffled state the system expects for this user. Useful if you lost it somehow.
@@ -99,7 +139,7 @@ class LearningManager:
 		@param token: The card we want to know about
 		@return time: the time this card will be due. Returns -1 if user not found. No error checking for card.
 		"""
-		user_index = self.check_valid_user(user)
+		user_index = self.check_valid_foruser(user)
 		if user_index == -1:
 			return user_index
 		cur_map, state = list(self.user_data[user_index])
@@ -119,9 +159,9 @@ class LearningManager:
 		cur_map, state = list(self.user_data[user_index])
 		t, r, correct, allV, e = cur_map[token]
 		if allV==0:
-			return 0.0
+			return (0.0, 0, 0)
 		accuracy = float(correct) / float(allV)
-		return accuracy
+		return (accuracy, correct, allV)
 
 	def get_init_recall_time(self):
 		"""
@@ -444,14 +484,14 @@ def test_learningManager(skip_long=False):
 	newV.set_penalty(2.1)
 	assert newV.get_penalty() == 2.1, "penalty changed wrong"
 	accuracy_test = LearningManager([1], tokens_to_learn=["a"], minutes=True)
-	assert accuracy_test.get_accuracy(1, "a") == 0.0, "wrong initial accuracy"
+	assert accuracy_test.get_accuracy(1, "a")[0] == 0.0, "wrong initial accuracy"
 	accuracy_test.get_today_cards(1)
 	accuracy_test.update_knowledge(1, [0])
 	accuracy_test.update_knowledge(1, [1])
-	assert accuracy_test.get_accuracy(1, "a") == 0.5, "wrong updated accuracy"
+	assert accuracy_test.get_accuracy(1, "a")[0] == 0.5, "wrong updated accuracy"
 	print("get/set checks passed!")
-
+	print(newV.hardness_update_for_user(3))
 	print("\nall tests passed!")
 
 if __name__ == '__main__':
-    test_learningManager(skip_long=False)
+    test_learningManager(skip_long=True)
