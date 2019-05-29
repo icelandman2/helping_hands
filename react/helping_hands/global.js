@@ -13,3 +13,9 @@ global.type = "";
 global.section_name = "";
 
 global.magic = 1;
+
+global.rand_ind = 0;
+
+global.new_cards_lm = [];
+
+global.results_lm = [];
