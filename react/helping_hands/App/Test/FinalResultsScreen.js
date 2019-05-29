@@ -1,46 +1,54 @@
 import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
+import firebase from '../../config/firebase';
+import RNFetchBlob from 'rn-fetch-blob';
+import images from "../../img"
 
-export class InstructionsScreen extends React.Component {
+export default class FinalResultsScreen extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = 
-    {
-      progress: 0,
-      indeterminate: true
-    };
   }
 
-  componentDidMount() {
-    this.animate();
+  update_knowledge() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        get_cards: false,
+        update_knowledge: true,
+        username: 1,
+        results: global.results_lm
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("Updated");
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
   }
-
-  animate() {
-    let progress = 0;
-    this.setState({ progress });
-    setTimeout(() => {
-      this.setState({ indeterminate: false });
-      setInterval(() => {
-        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
-        this.setState({ progress });
-      }, 500);
-    }, 1500);
-  }
-
+        
 
   render() {
     const {navigation} = this.props;
-    const type = navigation.getParam('type', 'Instructions');
-    const sectionName = navigation.getParam('sectionName', 'Alphabet');
+
+    this.update_knowledge();
     return (
       <View style={styles.container}>
-        <View style={styles.topContainerStyle}>
-          <Text style={styles.headerText}>{type}</Text>
-          <Text style={styles.subHeaderText}>This view will provide the answers to frequently asked questions as well as general how-tos for the Helping Hands application.            
-          </Text>
-        </View>                
+        <Text>Total learned: {global.learned}</Text>
+        <Text>Total not learned: {global.not_learned}</Text>
+
+        <Button
+          containerStyle={styles.button}
+          title="Back to home"
+          onPress={() => this.props.navigation.navigate('Details')}
+        />
+
       </View>
     );
   }

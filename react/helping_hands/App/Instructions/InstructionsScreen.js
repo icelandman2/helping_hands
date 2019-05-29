@@ -22,10 +22,6 @@ export default class InstructionsScreen extends React.Component {
     this.setState({ progress });
     setTimeout(() => {
       this.setState({ indeterminate: false });
-      setInterval(() => {
-        progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
-        this.setState({ progress });
-      }, 500);
     }, 1500);
   }
 

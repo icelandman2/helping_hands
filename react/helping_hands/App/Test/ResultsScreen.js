@@ -9,13 +9,22 @@ export default class ResultsScreen extends React.Component {
   }
 
   goBackToSigns= async function() {
-    this.props.navigation.push(global.type, {
-              sectionName: global.section_name,
-              type: global.type
-            });
+
     global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
+    global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
 
     global.curr_cards = global.curr_cards+1;
+    console.log("Curr cards!!! ", curr_cards);
+
+    if (global.cards_left == []) {
+        this.props.navigation.navigate(FinalResults);
+    } else {
+      this.props.navigation.navigate(global.type, {
+          sectionName: global.section_name,
+          type: global.type
+        });
+
+    }
 
   };
         
@@ -28,12 +37,13 @@ export default class ResultsScreen extends React.Component {
     if (prediction==(global.current_sign).toUpperCase()) {
       check = "Correct :)";
       paragraphText = "Nice job!"
+      global.results_lm.push(1);
       global.learned.push(global.current_sign);
-
     } else {
       check = "Incorrect :(";
       paragraphText = "Just a little more practice!";
-      global.not_learned.push(global.current_sign);
+      global.results_lm.push(0);
+      global.not_learned.push(global.current_sign);    
     }
     return (
       <View style={styles.container}>

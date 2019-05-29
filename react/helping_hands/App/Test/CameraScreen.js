@@ -8,7 +8,7 @@ import {RNCamera} from 'react-native-camera';
 
 import uuid from 'uuid';
 export default class CameraScreen extends React.Component {
-  constructor(props) {
+constructor(props) {
     super(props);
 
     this.state = 
@@ -17,7 +17,7 @@ export default class CameraScreen extends React.Component {
     };
   }
 
-  async takePicture() {
+  takePicture = async function() {
     var nav = this.props.navigation;
 
     if (this.camera) {
@@ -26,18 +26,18 @@ export default class CameraScreen extends React.Component {
       console.log("data URI: " + data.uri);
 
       const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function(e) {
-          console.log(e);
-          reject(new TypeError('Network request failed'));
-        };
-        xhr.responseType = 'blob';
-        xhr.open('GET', data.uri, true);
-        xhr.send(null);
-      });
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', data.uri, true);
+      xhr.send(null);
+    });
 
     const ref = firebase
       .storage()
@@ -58,7 +58,7 @@ export default class CameraScreen extends React.Component {
 
       console.log('Image URL:', image_url);
       console.log('Token:', token);
-/*
+
       fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
       method: 'POST',
       headers: {
@@ -66,13 +66,14 @@ export default class CameraScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
-        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
+        image_url: image_url,
+        token: token
+
       }),
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        nav.push('Results', {
+        nav.navigate('Results', {
             prediction: responseJson.sign,
           });
 
@@ -80,85 +81,16 @@ export default class CameraScreen extends React.Component {
       })
       .catch((error) =>{
         console.error(error);
-      });*/
-        nav.push('Results', {
-          prediction: 'a',
-        });
-
-      fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          image_url: image_url,
-          token: token,
-        }),
-        })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          prediction: responseJson.sign,
-        }, function(){
-
-        });
-
-      })
-        .catch((error) =>{
-          console.error(error);
-        });
-
-          
       });
-      console.log("download URI: " + snapshot.ref.getDownloadURL());
-      console.log("hello!!!!!");
-      
 
-
-      // return await snapshot.ref.getDownloadURL();
-
-
-        // const image = data.uri;
-
-        // const Blob = RNFetchBlob.polyfill.Blob
-        // const fs = RNFetchBlob.fs
-        // window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-        // window.Blob = Blob
-     
-       
-        // let uploadBlob = null
-        // const imageRef = firebase.storage().ref('posts').child("test.jpg")
-        // let mime = 'image/jpg'
-        // fs.readFile(image, 'base64')
-        //   .then((data) => {
-        //     return Blob.build(data, { type: `${mime};BASE64` })
-        // })
-        // .then((blob) => {
-        //     uploadBlob = blob
-        //     return imageRef.put(blob, { contentType: mime })
-        //   })
-        //   .then(() => {
-        //     uploadBlob.close()
-        //     console.log(imageRef.getDownloadURL);
-        //     return imageRef.getDownloadURL();
-        //   })
-        //   .then((url) => {
-        //     // URL of the image uploaded on Firebase storage
-        //     console.log(url);
-            
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-     
-        //   })  
+      //        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
+      //        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
         
-      // this.props.navigation.push('Results', {
-      //         prediction: 'a',
-      //       })
-      }
-    //)}
-  }
+    });
+    console.log("download URI: " + snapshot.ref.getDownloadURL());
+    console.log("hello!!!!!");
+    }
+  };
 
   render() {
     return (
