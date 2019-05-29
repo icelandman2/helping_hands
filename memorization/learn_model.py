@@ -6,6 +6,9 @@ from datetime import datetime as dt
 import copy
 import time
 
+import requests
+from flask import Flask, jsonify
+
 """
 Learning Management Class for Helping Hands
 
@@ -494,23 +497,46 @@ def test_learningManager(skip_long=False):
 	print("\nall tests passed!")
 
 
+"""
+{
+  "get_cards": false,
+  "update_knowledge": true,
+  "username": 1,
+  "results": [0, 1, 1]
+}
+"""
+
+	
+def google_cloud_parser(request):
+	request_json = request.get_json(silent=True)
+	if (request_json['get_cards']):
+		return google_cloud_get_cards(request)
+	elif request_json['update_knowledge']:
+		return google_cloud_update_knowledge(request)
+
 def google_cloud_get_cards(request):
 	request_json = request.get_json(silent=True)
-    username = request_json['username']
+	username = request_json['username']
 
-    lm = LearningManager()
-    cards = lm.get_today_cards(username)
+	tokens = ['a', 'b', 'c']
 
-    return jsonify(cards=cards)
+	lm = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
+	# lm = LearningManager()
+	cards = lm.get_today_cards(username)
+
+	return jsonify(cards=cards)
 
 def google_cloud_update_knowledge(request):
 	request_json = request.get_json(silent=True)
-    username = request_json['username']
-    results = request_json['results']
+	username = request_json['username']
+	results = request_json['results']
 
-    lm = LearningManager()
-    cards = lm.update_knowledge(username, results)
+	tokens = ['a', 'b', 'c']
+
+	lm = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
+	# lm = LearningManager()
+	cards = lm.update_knowledge(username, results)
 
 
 if __name__ == '__main__':
-    test_learningManager(skip_long=True)
+	test_learningManager(skip_long=True)
