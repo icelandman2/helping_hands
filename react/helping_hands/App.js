@@ -61,6 +61,41 @@ class HomeScreen extends React.Component {
       });
   }
 
+  // {
+  //   "get_cards": false,
+  //   "update_knowledge": true,
+  //   "username": 1,
+  //   "results": [0, 1, 1]
+  // }
+  update_cards() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        get_cards: true,
+        update_knowledge: true,
+        username: 1,
+        results: [0,0,0]
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        global.new_cards_lm = responseJson.cards;
+        console.log(global.new_cards_lm);
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+
+  componentDidMount() {
+    this.update_cards();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -93,8 +128,8 @@ class HomeScreen extends React.Component {
 
         <Button
           containerStyle={styles.button}
-          title="Test"
-          onPress={() => this.test_google_cloud()}
+          title="Update Daily Cards"
+          onPress={() => this.update_cards()}
         />
       </View>
     );
@@ -107,7 +142,7 @@ class LearnMenuScreen extends React.Component {
               sectionName: 'Alphabet',
               type: 'Learn'
             });
-    global.cards_left = ['a', 'b', 'c', 'd', 'p'];
+    global.cards_left = global.new_cards_lm; //['a', 'b', 'c', 'd', 'p'];
     // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
     global.total_cards = 26;
@@ -166,7 +201,7 @@ class TestMenuScreen extends React.Component {
               sectionName: 'alphabet',
               type: 'Test'
             });
-    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.cards_left = global.new_cards_lm; //['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
     global.total_cards = 26;
 
@@ -225,6 +260,7 @@ class LearnScreen extends React.Component {
 
   componentDidMount() {
     this.animate();
+    console.log("mounted!!!!!!\n");
   }
 
   animate() {
@@ -288,7 +324,8 @@ class TestScreen extends React.Component {
       progress: 0,
       indeterminate: true
     };
-    console.log(global.cards_left);
+    global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
+
   }
 
   componentDidMount() {
@@ -312,6 +349,11 @@ class TestScreen extends React.Component {
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'Test');
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
+
+    global.type = type;
+
+    // global.current_sign = global.cards_left[global.rand_ind];
+    global.current_sign = global.cards_left[0];
     return (
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
@@ -321,13 +363,13 @@ class TestScreen extends React.Component {
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>          
         {/*<SwipeCards style={{flex: 1}} />*/}
-        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>  
+        <Text style={styles.testQuestionStyle}>{global.current_sign.toUpperCase()}</Text>  
         <Text>When you're ready, check your knowledge by pressing the button and submitting a photo!</Text>      
         <Button
           containerStyle={styles.checkButton}
           title="Check sign"
           onPress={() =>
-            this.props.navigation.push('Camera')}/>    
+            this.props.navigation.navigate('Camera')}/>    
 {/*TODO:: get this button's position to function properly with*/}            
         <View style={styles.bottomContainerStyle}>
           <Button
@@ -401,13 +443,14 @@ class CameraScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
-        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
+        image_url: image_url,
+        token: token
+
       }),
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        nav.push('Results', {
+        nav.navigate('Results', {
             prediction: responseJson.sign,
           });
 
@@ -417,77 +460,12 @@ class CameraScreen extends React.Component {
         console.error(error);
       });
 
-      // fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application/json',
-      //       'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     image_url: image_url,
-      //     token: token,
-      //   }),
-      //   })
-      // .then((response) => response.json())
-      // .then((responseJson) => {
-      //   this.setState({
-      //     prediction: responseJson.sign,
-      //   }, function(){
-
-      //   });
-
-      // })
-      //   .catch((error) =>{
-      //     console.error(error);
-      //   });
-
+      //        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
+      //        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
         
     });
     console.log("download URI: " + snapshot.ref.getDownloadURL());
     console.log("hello!!!!!");
-    
-
-
-    // return await snapshot.ref.getDownloadURL();
-
-
-      // const image = data.uri;
-
-      // const Blob = RNFetchBlob.polyfill.Blob
-      // const fs = RNFetchBlob.fs
-      // window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-      // window.Blob = Blob
-   
-     
-      // let uploadBlob = null
-      // const imageRef = firebase.storage().ref('posts').child("test.jpg")
-      // let mime = 'image/jpg'
-      // fs.readFile(image, 'base64')
-      //   .then((data) => {
-      //     return Blob.build(data, { type: `${mime};BASE64` })
-      // })
-      // .then((blob) => {
-      //     uploadBlob = blob
-      //     return imageRef.put(blob, { contentType: mime })
-      //   })
-      //   .then(() => {
-      //     uploadBlob.close()
-      //     console.log(imageRef.getDownloadURL);
-      //     return imageRef.getDownloadURL();
-      //   })
-      //   .then((url) => {
-      //     // URL of the image uploaded on Firebase storage
-      //     console.log(url);
-          
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-   
-      //   })  
-      
-    // this.props.navigation.push('Results', {
-    //         prediction: 'a',
-    //       })
     }
   };
 
@@ -534,13 +512,22 @@ class ResultsScreen extends React.Component {
   }
 
   goBackToSigns= async function() {
-    this.props.navigation.push(global.type, {
-              sectionName: global.section_name,
-              type: global.type
-            });
+
     global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
+    global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
 
     global.curr_cards = global.curr_cards+1;
+    console.log("Curr cards!!! ", curr_cards);
+
+    if (global.cards_left == []) {
+        this.props.navigation.navigate(FinalResults);
+    } else {
+      this.props.navigation.navigate(global.type, {
+          sectionName: global.section_name,
+          type: global.type
+        });
+
+    }
 
   };
         
@@ -552,10 +539,12 @@ class ResultsScreen extends React.Component {
     var check = "";
     if (prediction==(global.current_sign).toUpperCase()) {
       check = "Correct :)"
+      global.results_lm.push(1);
       global.learned.push(global.current_sign);
 
     } else {
       check = "Incorrect :("
+      global.results_lm.push(0);
       global.not_learned.push(global.current_sign);
     }
     return (
@@ -571,6 +560,57 @@ class ResultsScreen extends React.Component {
           containerStyle={styles.button}
           title="Continue"
           onPress={this.goBackToSigns.bind(this)}
+        />
+
+      </View>
+    );
+  }
+
+}
+
+
+class FinalResultsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  update_knowledge() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        get_cards: false,
+        update_knowledge: true,
+        username: 1,
+        results: global.results_lm
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("Updated");
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+        
+
+  render() {
+    const {navigation} = this.props;
+
+    this.update_knowledge();
+    return (
+      <View style={styles.container}>
+        <Text>Total learned: {global.learned}</Text>
+        <Text>Total not learned: {global.not_learned}</Text>
+
+        <Button
+          containerStyle={styles.button}
+          title="Back to home"
+          onPress={() => this.props.navigation.navigate('Details')}
         />
 
       </View>
@@ -633,6 +673,7 @@ const AppNavigator = createStackNavigator(
     TestMenu: TestMenuScreen,
     Test: TestScreen,
     Results: ResultsScreen,
+    FinalResults: FinalResultsScreen
   },
   {
     initialRouteName: "Home"
