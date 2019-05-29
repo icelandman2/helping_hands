@@ -41,6 +41,41 @@ export default class HomeScreen extends React.Component {
       });
   }
 
+  // {
+  //   "get_cards": false,
+  //   "update_knowledge": true,
+  //   "username": 1,
+  //   "results": [0, 1, 1]
+  // }
+  update_cards() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        get_cards: true,
+        update_knowledge: true,
+        username: 1,
+        results: [0,0,0]
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        global.new_cards_lm = responseJson.cards;
+        console.log(global.new_cards_lm);
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+
+  componentDidMount() {
+    this.update_cards();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -114,9 +149,10 @@ export default class HomeScreen extends React.Component {
         />
         <Button
           containerStyle={styles.button}
-          title="Test Gcloud"
-          onPress={() => this.test_google_cloud()}
+          title="Update Daily Cards"
+          onPress={() => this.update_cards()}
         />
+
       </View>
     );
   }

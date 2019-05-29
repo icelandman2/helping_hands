@@ -9,7 +9,7 @@ export default class TestMenuScreen extends React.Component {
               sectionName: 'Alphabet',
               type: 'Test'
             });
-    global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.cards_left = global.new_cards_lm;//['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
     global.total_cards = 26;
 
@@ -76,6 +76,11 @@ export default class TestMenuScreen extends React.Component {
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
           </View>
         </View>
+        <Button
+          containerStyle={styles.button}
+          title="Main Menu"
+          onPress={() => this.props.navigation.pop()}
+        />        
       </View>
     );
   }

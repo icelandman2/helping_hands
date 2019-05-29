@@ -24,7 +24,7 @@ export default class TestScreen extends React.Component {
       progress: 0,
       indeterminate: true
     };
-    console.log(global.cards_left);
+    global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
   }
 
   componentDidMount() {
@@ -48,6 +48,11 @@ export default class TestScreen extends React.Component {
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'Test');
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
+
+    global.type = type;
+
+    // global.current_sign = global.cards_left[global.rand_ind];
+    global.current_sign = global.cards_left[0];
     return (
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
@@ -57,7 +62,7 @@ export default class TestScreen extends React.Component {
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>          
         {/*<SwipeCards style={{flex: 1}} />*/}
-        <Text style={styles.testQuestionStyle}>{global.cards_left[0].toString().toUpperCase()}</Text>  
+        <Text style={styles.testQuestionStyle}>{global.current_sign.toUpperCase()}</Text>  
         <Text style={styles.paragraphText}>When you're ready, check your knowledge by pressing the button and submitting a photo!</Text>      
         <Button
           containerStyle={styles.checkButton}
@@ -70,7 +75,7 @@ export default class TestScreen extends React.Component {
             containerStyle={styles.checkButton}
             title="Back to Test Menu"
             onPress={() =>
-              this.props.navigation.push('TestMenu')}/>
+              this.props.navigation.pop()}/>
         </View>              
 
       </View>

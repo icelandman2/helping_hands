@@ -8,7 +8,7 @@ export default class LearnMenuScreen extends React.Component {
               sectionName: 'Alphabet',
               type: 'Learn'
             });
-    global.cards_left = ['a', 'b', 'c', 'd', 'p'];
+    global.cards_left = global.new_cards_lm;//['a', 'b', 'c', 'd', 'p'];
     // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
     global.total_cards = 26;
@@ -75,6 +75,11 @@ export default class LearnMenuScreen extends React.Component {
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
           </View>
         </View>
+        <Button
+          containerStyle={styles.button}
+          title="Main Menu"
+          onPress={() => this.props.navigation.pop()}
+        />
       </View>
     );
   }

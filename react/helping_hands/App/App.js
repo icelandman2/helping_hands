@@ -23,6 +23,7 @@ import TestMenuScreen from './Test/TestMenuScreen';
 import TestScreen from './Test/TestScreen';
 import CameraScreen from './Test/CameraScreen';
 import ResultsScreen from './Test/ResultsScreen';
+import FinalResultsScreen from './Test/FinalResultsScreen';
 import InstructionsScreen from './Instructions/InstructionsScreen';
 
 const AppNavigator = createStackNavigator(
@@ -34,6 +35,7 @@ const AppNavigator = createStackNavigator(
     Camera: CameraScreen,
     TestMenu: TestMenuScreen,
     Test: TestScreen,
+    FinalResults: FinalResultsScreen,
     Results: ResultsScreen,
   },
   {

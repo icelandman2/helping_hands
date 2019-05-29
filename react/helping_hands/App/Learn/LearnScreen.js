@@ -17,6 +17,7 @@ export default class LearnScreen extends React.Component {
 
   componentDidMount() {
     this.animate();
+    console.log("mounted!!!!!!\n");    
   }
 
   animate() {
@@ -53,7 +54,12 @@ export default class LearnScreen extends React.Component {
         <SwipeCards style={styles.swipeCardsStyle}/>
 
         <View style={styles.bottomContainerStyle}>
-          <Text style={styles.paragraphText}>Swipe right when you're done learning a sign. Swipe left to do more learning later.</Text>                 
+          <Text style={styles.paragraphText}>When you're ready, check your progress by pressing the button and submitting an image!</Text>                 
+          <Button
+            containerStyle={styles.checkButton}
+            title="Check sign"
+            onPress={() =>
+              this.props.navigation.push('Camera')}/>          
           <Button
             containerStyle={styles.checkButton}
             title="Back to Learn Menu"
