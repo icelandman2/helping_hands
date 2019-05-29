@@ -493,5 +493,24 @@ def test_learningManager(skip_long=False):
 	print(newV.hardness_update_for_user(3))
 	print("\nall tests passed!")
 
+
+def google_cloud_get_cards(request):
+	request_json = request.get_json(silent=True)
+    username = request_json['username']
+
+    lm = LearningManager()
+    cards = lm.get_today_cards(username)
+
+    return jsonify(cards=cards)
+
+def google_cloud_update_knowledge(request):
+	request_json = request.get_json(silent=True)
+    username = request_json['username']
+    results = request_json['results']
+
+    lm = LearningManager()
+    cards = lm.update_knowledge(username, results)
+
+
 if __name__ == '__main__':
     test_learningManager(skip_long=True)

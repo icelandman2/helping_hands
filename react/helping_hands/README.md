@@ -75,6 +75,21 @@ GOOGLE CLOUD FUNCTIONS DON'T WORK WITH REACT NATIVE
 Firebase new start:
 http://nobrok.com/how-to-upload-image-to-firebase-using-react-native/
 
+Tutorial: Build a React, Firebase and Google Cloud Vision machine learning API app
+https://itnext.io/tutorial-build-a-react-firebase-and-google-cloud-vision-machine-learning-api-app-in-1-hour-e7eb7584aed4
+
+Names:
+https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/
+
+No bundle URL present bug:
+https://www.andrewcbancroft.com/blog/ios-development/react-native/solving-react-natives-no-bundle-url-present-error/
+
+Pytorch Google Cloud Functions requirements.txt bug:
+https://stackoverflow.com/questions/55449313/google-cloud-function-python-3-7-requirements-txt-makes-deploy-fail
+
+Load pytorch from URL?
+https://github.com/pytorch/vision/blob/master/torchvision/models/utils.py
+
 
 
 Open PT file from URL
