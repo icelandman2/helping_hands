@@ -271,7 +271,7 @@ def main():
               #'resnet152': torchvision.models.resnet152(pretrained = True),
               #'densenet161 pretrained': torchvision.models.densenet161(pretrained = True)
               #'inception pretrained': torchvision.models.inception_v3(pretrained=True),
-              #'googlenet pretrained': torchvision.models.googlenet(pretrained=True)}
+              'googlenet pretrained': torchvision.models.googlenet(pretrained=True)}
     for model_name in models:
         print("---- Testing " + model_name + " ----")
         model, acc = trainer(model_name, models[model_name])
