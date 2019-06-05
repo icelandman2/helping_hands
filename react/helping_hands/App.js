@@ -518,10 +518,13 @@ class ResultsScreen extends React.Component {
 
     global.curr_cards = global.curr_cards+1;
     console.log("Curr cards!!! ", curr_cards);
+    console.log("Cards left: ", global.cards_left);
 
-    if (global.cards_left == []) {
+    if (global.cards_left.length == 0) {
+      console.log("new screen");
         this.props.navigation.navigate(FinalResults);
     } else {
+      console.log("ohno!!!!");
       this.props.navigation.navigate(global.type, {
           sectionName: global.section_name,
           type: global.type
@@ -572,6 +575,7 @@ class ResultsScreen extends React.Component {
 class FinalResultsScreen extends React.Component {
   constructor(props) {
     super(props);
+    console.log("new screen!!!!");
   }
 
   update_knowledge() {
