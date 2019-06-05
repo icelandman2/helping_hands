@@ -8,6 +8,7 @@ import time
 
 import requests
 from flask import Flask, jsonify
+from firebase import firebase
 
 """
 Learning Management Class for Helping Hands
@@ -76,6 +77,9 @@ class LearningManager:
 		self.penalty = fail_penalty
 		self.users_ordered = users
 		self.user_data = []
+		self.firebase = firebase.FirebaseApplication('https://cs194wfinalproj.firebaseio.com', None)
+		#names for deletion when updating firebase db
+		self.firebase_name_prev = ""
 
 		#initialize user_data
 		for u in users:
@@ -382,6 +386,42 @@ class LearningManager:
 			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_tuple
 
 
+	def save_to_firebase(self):
+		"""
+		Saves the current state to firebase. Watch out for asynchronous issues. Hoping to update to just get data for a single user at some point.
+		"""
+		user_data_to_store = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time)
+		storage_id = self.firebase.post('/user_data', user_data_to_store)
+		if len(self.firebase_name_prev)>1:
+			self.firebase.delete('/user_data', self.firebase_name_prev)
+		self.firebase_name_prev = storage_id['name']
+
+	def get_firebase_id(self):
+		"""
+		Gets the ID of the firebase field of the current user data, provided we have called save_to_firebase. Will return "" otherwise.
+		Important to save this field whenever you want to come back later and get your data!
+		@return self.firebase_name_prev: the name of the field containing appropriate user data.
+		"""
+		return self.firebase_name_prev
+
+	def delete_unused_firebase_data(self, firebase_id):
+		"""
+		Cleanup function to delete unused data. By default, save_to_firebase helps a bit with cleanup when used repeatedly, but if you run multiple instances
+		or something else like that you will need to run this periodically to keep the database from getting messy.
+		@param firebase_id: The name of the POST field returned by self.firebase.post that you wish to delete
+		"""
+		self.firebase.delete('user_data/', firebase_id)
+
+
+	def get_from_firebase(self, firebase_id):
+		"""
+		Retrieve a saved state from firebase. Must have a valid state to retrieve. Does not error check.
+		@param firebase_id: the returned POST id to retrieve from
+		"""
+		retrieved_user_data = self.firebase.get('/user_data', None)
+		self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_user_data[firebase_id]
+
+
 def dotline():
 	for i in range(0, 19):
 		time.sleep(.01)
@@ -451,6 +491,10 @@ def test_learningManager(skip_long=False):
 	else:
 		assert len(newV.get_today_cards(1)) == 0, "failed to retrieve users properly"
 	assert len(newV.get_today_cards(3)) == 3, "failed to retrieve users properly"
+
+	test.save_to_firebase()
+	newV2 = LearningManager([1], tokens_to_learn=['a','c','d'], minutes=False)
+	newV2.get_from_firebase(test.get_firebase_id())
 	print("save/load functionality checks passed!")
 
 	print("testing ability to get extra cards, add users, and add cards")
