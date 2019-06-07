@@ -1,20 +1,27 @@
+/*
+ * file: App.js
+ * Helping Hands Team © 2019
+ * This is the main App interface for the Helping Hands Application
+ * It contains the definition of the app's global navigation object and the classes defining each of the main
+ * views of the Helping HAnds application. It also defines/imports global styling that 
+*/
 import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import { Header } from "native-base";
-import * as Progress from 'react-native-progress';
+// import { Header } from "native-base";
+// import * as Progress from 'react-native-progress';
 
 // import firebase from 'firebase'
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 
-import {RNCamera} from 'react-native-camera';
+// import {RNCamera} from 'react-native-camera';
 
 
-import uuid from 'uuid';
+// import uuid from 'uuid';
 // import Environment from './config/environment';
-import images from '../img';
+// import images from '../img';
 
 import HomeScreen from './Home/HomeScreen';
 import LearnMenuScreen from './Learn/LearnMenuScreen';

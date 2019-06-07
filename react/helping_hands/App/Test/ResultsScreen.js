@@ -15,9 +15,12 @@ export default class ResultsScreen extends React.Component {
 
     global.curr_cards = global.curr_cards+1;
     console.log("Curr cards!!! ", curr_cards);
+    console.log("Global Cards Left = " , global.cards_left.length);
+    console.log("just adding to see if recomp works\n");
+    if (global.cards_left.length == 0) {
+      console.log("we are about to go to finalresults...right??");
+        this.props.navigation.navigate('FinalResults');
 
-    if (global.cards_left == []) {
-        this.props.navigation.navigate(FinalResults);
     } else {
       this.props.navigation.navigate(global.type, {
           sectionName: global.section_name,

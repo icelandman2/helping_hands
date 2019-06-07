@@ -54,7 +54,7 @@ export default class LearnMenuScreen extends React.Component {
             </View>
             <TouchableOpacity 
               containerStyle={styles.moduleButtonText}
-              onPress={this.pressEtiquette.bind(this)}
+              onPress={this.pressAlphabet.bind(this)}
             ><Text style={styles.moduleButtonText}>Alphabet</Text></TouchableOpacity>
           </View>
           <View style={styles.moduleButtonContainer}>
