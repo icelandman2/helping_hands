@@ -317,6 +317,20 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		8E9AEA0E22A7303A00A468D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2508ABA61ED4DEAA5BDA924 /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
+		};
+		8E9AEA1122A7303A00A468D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE103E68C4BF4CDEA5A122CF /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
 		8EFE831B226D5CE30085DFF2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -752,6 +766,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8E9AEA0922A7303A00A468D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E9AEA1222A7303A00A468D4 /* libRNImagePicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8E9AEA0B22A7303A00A468D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E9AEA0F22A7303A00A468D4 /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		8EFE82F5226D5CE00085DFF2 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -891,7 +921,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 78L6L79MVB;
+						DevelopmentTeam = GD9WPFGXB4;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -972,7 +1002,7 @@
 					ProjectRef = 6222A7DB65AC45B3BFB6E202 /* RNCamera.xcodeproj */;
 				},
 				{
-					ProductGroup = 5999B63F22A8EB13006F96F8 /* Products */;
+					ProductGroup = 8E9AEA0B22A7303A00A468D4 /* Products */;
 					ProjectRef = A2508ABA61ED4DEAA5BDA924 /* RNFetchBlob.xcodeproj */;
 				},
 				{
@@ -980,7 +1010,7 @@
 					ProjectRef = AB4AF9854A5147EA9875DDF9 /* RNGestureHandler.xcodeproj */;
 				},
 				{
-					ProductGroup = 5999B63A22A8EB13006F96F8 /* Products */;
+					ProductGroup = 8E9AEA0922A7303A00A468D4 /* Products */;
 					ProjectRef = AE103E68C4BF4CDEA5A122CF /* RNImagePicker.xcodeproj */;
 				},
 				{
@@ -1235,6 +1265,20 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8E9AEA0F22A7303A00A468D4 /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = 8E9AEA0E22A7303A00A468D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8E9AEA1222A7303A00A468D4 /* libRNImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImagePicker.a;
+			remoteRef = 8E9AEA1122A7303A00A468D4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8EFE831C226D5CE30085DFF2 /* libjsi.a */ = {
@@ -1523,7 +1567,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 78L6L79MVB;
+				DEVELOPMENT_TEAM = GD9WPFGXB4;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -1550,7 +1594,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 78L6L79MVB;
+				DEVELOPMENT_TEAM = GD9WPFGXB4;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
