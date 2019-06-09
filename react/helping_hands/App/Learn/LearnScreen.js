@@ -49,17 +49,17 @@ export default class LearnScreen extends React.Component {
           <Text style={styles.subHeaderText}>{sectionName}</Text>
           <Text>Cards Left: {global.cards_left.toString()}</Text>
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+          <SwipeCards style={styles.swipeCardsStyle}/>   
+          {/*<Text>Current card: {global.current_sign}</Text>*/}
         </View>
-        <Text>Current card: {global.current_sign}</Text>
-        <SwipeCards style={styles.swipeCardsStyle}/>
 
         <View style={styles.bottomContainerStyle}>
-          <Text style={styles.paragraphText}>When you're ready, check your progress by pressing the button and submitting an image!</Text>                 
+          {/*<Text style={styles.paragraphText}>When you're ready, check your progress by pressing the button and submitting an image!</Text>                 
           <Button
             containerStyle={styles.checkButton}
             title="Check sign"
             onPress={() =>
-              this.props.navigation.push('Camera')}/>          
+              this.props.navigation.push('Camera')}/>*/}          
           <Button
             containerStyle={styles.checkButton}
             title="Back to Learn Menu"
@@ -101,6 +101,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 100,
     zIndex: -1,
+    position: "absolute",
+    top: 200,
   },
   testQuestionStyle: {
     fontSize: 64,
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
   },
   bottomContainerStyle: {
     position: 'absolute',
-    bottom: 15,
+    bottom: 75,
     alignItems: "center",
     justifyContent: "center",
   },

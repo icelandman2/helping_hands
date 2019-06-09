@@ -11,7 +11,7 @@ export default class LearnMenuScreen extends React.Component {
     global.cards_left = global.new_cards_lm;//['a', 'b', 'c', 'd', 'p'];
     // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
-    global.total_cards = 26;
+    global.total_cards = global.cards_left.length;
 
     global.learned = [];
     global.not_learned = [];

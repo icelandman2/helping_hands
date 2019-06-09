@@ -52,7 +52,12 @@ export default class TestScreen extends React.Component {
     global.type = type;
 
     // global.current_sign = global.cards_left[global.rand_ind];
-    global.current_sign = global.cards_left[0];
+    if (global.cards_left != []) {
+      global.current_sign = global.cards_left[0];
+    }
+    else {
+      this.props.navigation.pop();
+    }
     return (
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
