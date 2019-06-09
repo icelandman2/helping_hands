@@ -5,13 +5,15 @@ import { Button } from 'react-native-elements';
 export default class TestMenuScreen extends React.Component {
 
   pressAlphabet= async function() {
+    console.log("we are going to update cards now");
+    this.update_cards();    
     this.props.navigation.push('Test', {
               sectionName: 'Alphabet',
               type: 'Test'
             });
     global.cards_left = global.new_cards_lm;//['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
     global.curr_cards = 0;
-    global.total_cards = 26;
+    global.total_cards = global.cards_left.length;
 
     global.learned = [];
     global.not_learned = [];
@@ -26,12 +28,37 @@ export default class TestMenuScreen extends React.Component {
             });
     global.cards_left = ['hello', 'thanks', 'bye'];
     global.curr_cards = 0;
-    global.total_cards = 3;
+    global.total_cards = global.cards_left.length;
 
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
   };
+
+  update_cards() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        get_cards: true,
+        update_knowledge: true,
+        username: 1,
+        results: [0,0,0]
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        global.new_cards_lm = responseJson.cards;
+        console.log(global.new_cards_lm);
+        
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
 
   render() {
     const {navigation} = this.props;
@@ -45,7 +72,9 @@ export default class TestMenuScreen extends React.Component {
           <View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>            
-                <TouchableOpacity onPress={this.pressAlphabet.bind(this)}>
+                <TouchableOpacity onPress={                  
+                  this.pressAlphabet.bind(this)
+                }>
                   <Image
                     style={styles.moduleButton}
                     source={require('../../img/alphabet_signs/a.png')}

@@ -50,10 +50,9 @@ class NoMoreCards extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.noMoreCardsText}>No more cards</Text>
+        <Text style={styles.noMoreCardsText}>No more cards in this module!</Text>
         <Text style={styles.noMoreCardsText}>Learned: {global.learned.toString()}</Text>
         <Text style={styles.noMoreCardsText}>Not learned: {global.not_learned.toString()}</Text>
-        <Text style={styles.noMoreCardsText}>What's left: {global.cards_left.toString()}</Text>
       </View>
     )
   }
@@ -102,12 +101,7 @@ export default class extends React.Component {
     global.cards_left = global.cards_left.filter(item => item !== card.name);
     global.not_learned.push(card.name);
     global.curr_cards = global.curr_cards+1;
-    //this.props.parentHandleNope(card);
   }
-
-  // parentHandleNope (card) {
-  //   this.state.cards.push(card.name);
-  // }
 
   handleMaybe (card) {
     global.cards_left = global.cards_left.filter(item => item !== card.name);
@@ -119,10 +113,8 @@ export default class extends React.Component {
     return (
       <SwipeCards
         cards={this.state.cards}
-        // renderCard={(cardData) => <Card method={this.parentHandleNope} {...cardData} />}
         renderCard={(cardData) => <Card {...cardData} />}        
         renderNoMoreCards={() => <NoMoreCards />}
-
         handleYup={this.handleYup}
         handleNope={this.handleNope}
         handleMaybe={this.handleMaybe}
@@ -138,6 +130,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 300,
     height: 300,
+    position: 'relative',
+    top: -80,
   },
   thumbnail: {
     width: 300,

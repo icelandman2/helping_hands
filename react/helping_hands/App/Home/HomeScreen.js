@@ -65,7 +65,7 @@ export default class HomeScreen extends React.Component {
       .then((responseJson) => {
         global.new_cards_lm = responseJson.cards;
         console.log(global.new_cards_lm);
-
+        
       })
       .catch((error) =>{
         console.error(error);

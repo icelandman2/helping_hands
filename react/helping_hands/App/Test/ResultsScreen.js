@@ -9,24 +9,21 @@ export default class ResultsScreen extends React.Component {
   }
 
   goBackToSigns= async function() {
+    global.curr_cards = global.curr_cards+1;    
+    if (global.cards_left.length !=1 ) {
+      global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
 
-    global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
-    global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
-
-    global.curr_cards = global.curr_cards+1;
-    console.log("Curr cards!!! ", curr_cards);
-    console.log("Global Cards Left = " , global.cards_left.length);
-    console.log("just adding to see if recomp works\n");
-    if (global.cards_left.length == 0) {
-      console.log("we are about to go to finalresults...right??");
-        this.props.navigation.navigate('FinalResults');
-
-    } else {
+      global.rand_ind = Math.floor(Math.random()*global.cards_left.length);
       this.props.navigation.navigate(global.type, {
           sectionName: global.section_name,
           type: global.type
-        });
-
+        });            
+    } else {
+      //if length IS ONE
+      console.log("before push ie length is 1?")
+        this.props.navigation.navigate('FinalResults', {
+            prediction: '1',
+          });     
     }
 
   };

@@ -11,6 +11,9 @@ export default class FinalResultsScreen extends React.Component {
   }
 
   update_knowledge() {
+//    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+    console.log("fast console log!");
+    console.log("we are fetching from /learning_manage with get_cards: false and results: " + global.results_lm + '\n');
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
       headers: {
@@ -26,9 +29,11 @@ export default class FinalResultsScreen extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("Updated");
+        console.log("Updated and we are successful in getting the response from server");
       })
       .catch((error) =>{
+        console.log("we had an error");
+        //toDO: we are getting an error right here!!
         console.error(error);
       });
   }
@@ -36,17 +41,29 @@ export default class FinalResultsScreen extends React.Component {
 
   render() {
     const {navigation} = this.props;
-
-    this.update_knowledge();
+    console.log("we are beginning render before update_knowledge");    
+    console.log("add another console log!")    
+    // this.update_knowledge();
+    console.log("we are at the end of update_knowledge"); 
+    console.log("currently our global learned variable is " + global.learned);
+    // var learnedMessage = global.learned === [] ? "No symbols :(" : global.learned;
+    var learnedMessage; 
+    if (global.learned.length == 0) {
+      console.log("we see that we lerned no symbols");
+      learnedMessage = "No symbols :(";
+    } else {
+      console.log("we see that we lerned SOME! symbols");      
+      learnedMessage = global.learned.join();
+    }
     return (
       <View style={styles.container}>
-        <Text>Total learned: {global.learned}</Text>
-        <Text>Total not learned: {global.not_learned}</Text>
+        <Text>Total learned: {learnedMessage}</Text>
+        <Text>Total not learned: {global.not_learned.join()}</Text>
 
         <Button
           containerStyle={styles.button}
-          title="Back to home"
-          onPress={() => this.props.navigation.navigate('Details')}
+          title="Back To Test Menu"
+          onPress={() => this.props.navigation.navigate('TestMenu')}
         />
 
       </View>
