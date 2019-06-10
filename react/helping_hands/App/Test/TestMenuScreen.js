@@ -2,8 +2,29 @@ import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 
+import styles from '../styles';
+
+/*
+ * class TestMenuScreen
+ * ------------------------------------------------------
+ * This is the select screen where a student selects which module they would like to be
+ * tested on. The symbols that a student will be tested on are selected ahead of time by the 
+ * learning manager backend, which is invoked through a google cloud function. For each symbol,
+ * the student will be prompted to submit an image that is the student's attempt to reproduce
+ * the symbol that they learned in the Learn module, which the learning manager has determined 
+ * that the student needs to practice.
+ */
+
 export default class TestMenuScreen extends React.Component {
 
+  
+  /*
+   * function: pressAlphabet
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "alphabet" and 
+   * initializes global state variables to be the relevant letters to practice signing
+   * according to the learning manager
+   */
   pressAlphabet= async function() {
     console.log("we are going to update cards now");
     this.update_cards();    
@@ -11,7 +32,7 @@ export default class TestMenuScreen extends React.Component {
               sectionName: 'Alphabet',
               type: 'Test'
             });
-    global.cards_left = global.new_cards_lm;//['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
+    global.cards_left = global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
 
@@ -21,6 +42,13 @@ export default class TestMenuScreen extends React.Component {
 
   };
 
+  /*
+   * function: pressEtiquette
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "etiquette" and 
+   * initializes global state variables to be the relevant words to practice signing
+   * according to the learning manager
+   */
   pressEtiquette= async function() {
     this.props.navigation.push('Test', {
               sectionName: 'Etiquette',
@@ -35,6 +63,16 @@ export default class TestMenuScreen extends React.Component {
     global.maybe_learned = [];
   };
 
+  /*
+   * function: update_knowledge()
+   * ---------------------------------
+   * Calls the Google Cloud Function running at 
+   * https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage
+   * and receives the cards that the user should practice. Updates global state variables
+   * to handle the presentation of the proper learning cards for the student.
+   * Should eventually be separated into its own class, a service module, to be included
+   * when necessary on visual interfaces
+   */
   update_cards() {
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
@@ -66,7 +104,7 @@ export default class TestMenuScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
-          <Text style={styles.headerText}>{type}</Text>
+          <Text style={styles.headerText}>Test</Text>
         </View>
         <View style={styles.moduleContainerStyle}>
           <View style={styles.moduleButtonContainer}>
@@ -87,7 +125,7 @@ export default class TestMenuScreen extends React.Component {
               onPress={this.pressAlphabet.bind(this)}
             ><Text style={styles.moduleButtonText}>Alphabet</Text></TouchableOpacity>
           </View>
-          <View style={styles.moduleButtonContainer}>
+          {/*<View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>                        
                 <TouchableOpacity onPress={this.pressEtiquette.bind(this)}>
@@ -103,7 +141,7 @@ export default class TestMenuScreen extends React.Component {
               title="Basic Etiquette"
               onPress={this.pressEtiquette.bind(this)}
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
-          </View>
+          </View>*/}
         </View>
         <Button
           containerStyle={styles.button}
@@ -114,123 +152,3 @@ export default class TestMenuScreen extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  baseText: {
-
-  },
-  topContainerStyle: {
-    // position: 'absolute',
-    top: 0,
-    alignItems: "center",
-    justifyContent: "center",   
-  },
-  headerText: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  subHeaderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  paragraphText: {
-    fontSize: 14,
-    width: 250,
-    margin: 5,
-    textAlign: "center",
-  },
-  swipeCardsStyle: {
-    flex: 1,
-    height: 100,
-    zIndex: -1,
-  },
-  testQuestionStyle: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    margin: 25,
-  },
-  bottomContainerStyle: {
-    position: 'absolute',
-    bottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    top: 0,
-    left: 0,
-    textAlign: 'center',
-    // backgroundColor: '#e9ebee',
-  },
-  button: {
-    padding:10,
-  },
-  moduleContainerStyle: {
-    //alignItems: 'flex-end',
-    flex: 1, 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end',
-  },
-  moduleButtonContainer: {
-    margin: 30,
-    marginTop: 0,
-    alignItems: "center",
-//    justifyContent: "center",
-  },
-  CircleShapeView: {
-    width: 120,
-    height: 120,
-    borderRadius: 120/2,
-    backgroundColor: '#00BCD4',
-    padding: 20,
-},
-  InnerCircleShapeView: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
-    backgroundColor: '#FFF',
-    // padding: 10, 
-    paddingLeft: 5, 
-    paddingTop: 10,  
-  },
-  moduleButton: {
-    width: 60,
-    height: 60,
-    // flex: 1,
-    borderRadius: 15,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
-    //borderRadius: 75,
-  },
-  moduleButtonText: {
-    fontSize:14,
-    textDecorationLine: "underline",
-    marginTop: 5,
-    // backgroundColor: "transparent",
-
-  },
-  checkButton: {
-    padding: 10, 
-    width: 300,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    //alignItems: 'center',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40  
-  },
-})
