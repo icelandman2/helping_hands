@@ -1,3 +1,11 @@
+/*
+ * Module FinalResultsScreen
+ * ---------------------------------
+ * This screen presents the student's performance on the selected testing module.
+ * It also sends the performance results to the cloud-based learning manager so the user 
+ * can receive cards tuned to the user's current progress. Allows the student to navigate back to 
+ * the testing module select menu
+ */
 import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
@@ -5,13 +13,27 @@ import firebase from '../../config/firebase';
 import RNFetchBlob from 'rn-fetch-blob';
 import images from "../../img"
 
+import styles from "../styles";
+
 export default class FinalResultsScreen extends React.Component {
   constructor(props) {
     super(props);
   }
 
+  /*
+   * function: update_knowledge()
+   * ---------------------------------
+   * Calls the Google Cloud Function running at 
+   * https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage
+   * and receives the cards that the user should practice. Updates global state variables
+   * to handle the presentation of the proper learning cards for the student.
+   * Should eventually be separated into its own class, a service module, to be included
+   * when necessary on visual interfaces
+   * ----There is currently no error checking done on the backend, in particular:
+   * ----passing get_cards: false is going to CRASH the app.
+   */
+
   update_knowledge() {
-//    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
     console.log("fast console log!");
     console.log("we are fetching from /learning_manage with get_cards: false and results: " + global.results_lm + '\n');
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
@@ -21,32 +43,28 @@ export default class FinalResultsScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        get_cards: false,
+        get_cards: true,
         update_knowledge: true,
         username: 1,
         results: global.results_lm
       }),
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log("Updated and we are successful in getting the response from server");
-      })
-      .catch((error) =>{
-        console.log("we had an error");
-        //toDO: we are getting an error right here!!
-        console.error(error);
-      });
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("Updated and we are successful in getting the response from server");
+    })
+    .catch((error) =>{
+      console.log("we had an error");
+      console.error(error);
+    });
   }
-        
 
   render() {
-    const {navigation} = this.props;
-    console.log("we are beginning render before update_knowledge");    
-    console.log("add another console log!")    
-    // this.update_knowledge();
-    console.log("we are at the end of update_knowledge"); 
-    console.log("currently our global learned variable is " + global.learned);
-    // var learnedMessage = global.learned === [] ? "No symbols :(" : global.learned;
+    const {navigation} = this.props;  
+    this.update_knowledge();
+
+    //calculating the right messages to display to the user -- how did they perform in their
+    //recall for this module?
     var learnedMessage; 
     if (global.learned.length == 0) {
       console.log("we see that we lerned no symbols");
@@ -57,8 +75,8 @@ export default class FinalResultsScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <Text>Total learned: {learnedMessage}</Text>
-        <Text>Total not learned: {global.not_learned.join()}</Text>
+        <Text style={styles.moduleButtonText}>Symbols learned: {learnedMessage}</Text>
+        <Text style={styles.moduleButtonText}>Symbols not learned: {global.not_learned.join()}</Text>
 
         <Button
           containerStyle={styles.button}
@@ -70,123 +88,3 @@ export default class FinalResultsScreen extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  baseText: {
-
-  },
-  topContainerStyle: {
-    // position: 'absolute',
-    top: 0,
-    alignItems: "center",
-    justifyContent: "center",   
-  },
-  headerText: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  subHeaderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  paragraphText: {
-    fontSize: 14,
-    width: 250,
-    margin: 5,
-    textAlign: "center",
-  },
-  swipeCardsStyle: {
-    flex: 1,
-    height: 100,
-    zIndex: -1,
-  },
-  testQuestionStyle: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    margin: 25,
-  },
-  bottomContainerStyle: {
-    position: 'absolute',
-    bottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    top: 0,
-    left: 0,
-    textAlign: 'center',
-    // backgroundColor: '#e9ebee',
-  },
-  button: {
-    padding:10,
-  },
-  moduleContainerStyle: {
-    //alignItems: 'flex-end',
-    flex: 1, 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end',
-  },
-  moduleButtonContainer: {
-    margin: 30,
-    marginTop: 0,
-    alignItems: "center",
-//    justifyContent: "center",
-  },
-  CircleShapeView: {
-    width: 120,
-    height: 120,
-    borderRadius: 120/2,
-    backgroundColor: '#00BCD4',
-    padding: 20,
-},
-  InnerCircleShapeView: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
-    backgroundColor: '#FFF',
-    // padding: 10, 
-    paddingLeft: 5, 
-    paddingTop: 10,  
-  },
-  moduleButton: {
-    width: 60,
-    height: 60,
-    // flex: 1,
-    borderRadius: 15,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
-    //borderRadius: 75,
-  },
-  moduleButtonText: {
-    fontSize:14,
-    textDecorationLine: "underline",
-    marginTop: 5,
-    // backgroundColor: "transparent",
-
-  },
-  checkButton: {
-    padding: 10, 
-    width: 300,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    //alignItems: 'center',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40  
-  },
-})

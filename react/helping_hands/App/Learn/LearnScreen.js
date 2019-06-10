@@ -3,6 +3,18 @@ import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleShee
 import { Button } from 'react-native-elements';
 import SwipeCards from './SwipeCards.js'
 import * as Progress from 'react-native-progress';
+import styles from '../styles';
+
+/*
+ * class LearnMScreen
+ * ------------------------------------------------------
+ * The student receives a stack of swipe cards that they will practice signing
+ * outside of the app. If a student feels that they have gained competence with a sign, theyy
+ * will mark it as "learned" by swiping right, but if they don't feel they've gained competence,
+ * then they will mark it as "not_learned" by swiping left.
+ * At the end, the app will present a summary of which cards the user marked as "learned" and those that they marked
+ * as "not learned" during the learning dialogue 
+ */
 
 export default class LearnScreen extends React.Component {
   constructor(props) {
@@ -17,7 +29,6 @@ export default class LearnScreen extends React.Component {
 
   componentDidMount() {
     this.animate();
-    console.log("mounted!!!!!!\n");    
   }
 
   animate() {
@@ -48,7 +59,7 @@ export default class LearnScreen extends React.Component {
           <Text style={styles.headerText}>{type}</Text>
           <Text style={styles.subHeaderText}>{sectionName}</Text>
           <Text>Cards Left: {global.cards_left.toString()}</Text>
-          <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+          <Progress.Bar color = "#2089Dc" progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
           <SwipeCards style={styles.swipeCardsStyle}/>   
           {/*<Text>Current card: {global.current_sign}</Text>*/}
         </View>
@@ -71,124 +82,3 @@ export default class LearnScreen extends React.Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  baseText: {
-
-  },
-  topContainerStyle: {
-    // position: 'absolute',
-    top: 0,
-    alignItems: "center",
-    justifyContent: "center",   
-  },
-  headerText: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  subHeaderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  paragraphText: {
-    fontSize: 14,
-    width: 250,
-    margin: 5,
-    textAlign: "center",
-  },
-  swipeCardsStyle: {
-    flex: 1,
-    height: 100,
-    zIndex: -1,
-    position: "absolute",
-    top: 200,
-  },
-  testQuestionStyle: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    margin: 25,
-  },
-  bottomContainerStyle: {
-    position: 'absolute',
-    bottom: 75,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    top: 0,
-    left: 0,
-    textAlign: 'center',
-    // backgroundColor: '#e9ebee',
-  },
-  button: {
-    padding:10,
-  },
-  moduleContainerStyle: {
-    //alignItems: 'flex-end',
-    flex: 1, 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end',
-  },
-  moduleButtonContainer: {
-    margin: 30,
-    marginTop: 0,
-    alignItems: "center",
-//    justifyContent: "center",
-  },
-  CircleShapeView: {
-    width: 120,
-    height: 120,
-    borderRadius: 120/2,
-    backgroundColor: '#00BCD4',
-    padding: 20,
-},
-  InnerCircleShapeView: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
-    backgroundColor: '#FFF',
-    // padding: 10, 
-    paddingLeft: 5, 
-    paddingTop: 10,  
-  },
-  moduleButton: {
-    width: 60,
-    height: 60,
-    // flex: 1,
-    borderRadius: 15,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
-    //borderRadius: 75,
-  },
-  moduleButtonText: {
-    fontSize:14,
-    textDecorationLine: "underline",
-    marginTop: 5,
-    // backgroundColor: "transparent",
-
-  },
-  checkButton: {
-    padding: 10, 
-    width: 300,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    //alignItems: 'center',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40  
-  },
-})

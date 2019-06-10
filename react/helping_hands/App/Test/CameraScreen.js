@@ -5,8 +5,17 @@ import firebase from '../../config/firebase';
 import RNFetchBlob from 'rn-fetch-blob';
 import {RNCamera} from 'react-native-camera';
 
-
 import uuid from 'uuid';
+
+/*
+ * class CameraScreen
+ * ------------------------------------------------------
+ * This is the screen that handles taking pictures of the student's attempts to reproduce 
+ * a word or letter that they were prompted to sign by the app's TestScreen class. This class interacts
+ * with the serverless Helping Hands backend to return a prediction of whether or not a student's attempt
+ * at a symbol was correct or not.
+ */
+
 export default class CameraScreen extends React.Component {
 constructor(props) {
     super(props);
@@ -17,78 +26,83 @@ constructor(props) {
     };
   }
 
+  /*
+   * function: takePicture()
+   * ---------------------------------
+   * Calls the Google Cloud Function running at 
+   * https://us-central1-helping-hands-cs194.cloudfunctions.net/test10 where a cloud function is 
+   * that has access to the Helping Hands ASL letters model and runs inference against it
+   * using the input photo taken by the user in their attempt to reproduce the symbol that they
+   * were prompted to on the test screen.
+   */
+
   takePicture = async function() {
     var nav = this.props.navigation;
 
+    //we need to be able to find the camera for our image-mediated verification
+    //that the student has learned the sign to work
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
       console.log("data URI: " + data.uri);
 
+      //This blob posts an image to firebase, receiving the URL that the image file
+      //is stored at back in the response
       const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function(e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', data.uri, true);
-      xhr.send(null);
-    });
-
-    const ref = firebase
-      .storage()
-      .ref()
-      .child(uuid.v4());
-    const snapshot = await ref.put(blob);
-
-    blob.close();
-
-
-    snapshot.ref.getDownloadURL().then(function(downloadURL) {
-      console.log('File available at', downloadURL);
-
-      var image_url = (downloadURL.split("/")[7]).split("?")[0];
-      var token = downloadURL.split("=")[2];
-
-      var prediction = "DEFAULT";
-
-      console.log('Image URL:', image_url);
-      console.log('Token:', token);
-
-      fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        image_url: image_url,
-        token: token
-
-      }),
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        nav.navigate('Results', {
-            prediction: responseJson.sign,
-          });
-
-
-      })
-      .catch((error) =>{
-        console.error(error);
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', data.uri, true);
+        xhr.send(null);
       });
 
-      //        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
-      //        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
-        
-    });
-    console.log("download URI: " + snapshot.ref.getDownloadURL());
-    console.log("hello!!!!!");
+      const ref = firebase
+        .storage()
+        .ref()
+        .child(uuid.v4());
+      const snapshot = await ref.put(blob);
+
+      blob.close();
+
+      //gets the image URL of the photo that we just took on the phone and uploaded to firebase
+      //then post that URL to our Computer Vision model running in the cloud for inference 
+      //too see if the user signed correctly 
+      snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        var image_url = (downloadURL.split("/")[7]).split("?")[0];
+        var token = downloadURL.split("=")[2];
+
+        var prediction = "DEFAULT";
+
+        //post the downloaded image to the ASL model running as a google cloud function
+        fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            image_url: image_url,
+            token: token
+
+          }),
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          //navigate to the results page to report whether the student got the sign right or wrong
+          nav.navigate('Results', {
+            prediction: responseJson.sign,
+          });
+        })
+        .catch((error) =>{
+          console.error(error);
+        });
+      });
     }
   };
 
@@ -130,47 +144,6 @@ constructor(props) {
 }
 
 const styles = StyleSheet.create({
-  baseText: {
-
-  },
-  topContainerStyle: {
-    // position: 'absolute',
-    top: 0,
-    alignItems: "center",
-    justifyContent: "center",   
-  },
-  headerText: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  subHeaderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  paragraphText: {
-    fontSize: 14,
-    width: 250,
-    margin: 5,
-    textAlign: "center",
-  },
-  swipeCardsStyle: {
-    flex: 1,
-    height: 100,
-    zIndex: -1,
-  },
-  testQuestionStyle: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    margin: 25,
-  },
-  bottomContainerStyle: {
-    position: 'absolute',
-    bottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -179,58 +152,6 @@ const styles = StyleSheet.create({
     left: 0,
     textAlign: 'center',
     // backgroundColor: '#e9ebee',
-  },
-  button: {
-    padding:10,
-  },
-  moduleContainerStyle: {
-    //alignItems: 'flex-end',
-    flex: 1, 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end',
-  },
-  moduleButtonContainer: {
-    margin: 30,
-    marginTop: 0,
-    alignItems: "center",
-//    justifyContent: "center",
-  },
-  CircleShapeView: {
-    width: 120,
-    height: 120,
-    borderRadius: 120/2,
-    backgroundColor: '#00BCD4',
-    padding: 20,
-},
-  InnerCircleShapeView: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
-    backgroundColor: '#FFF',
-    // padding: 10, 
-    paddingLeft: 5, 
-    paddingTop: 10,  
-  },
-  moduleButton: {
-    width: 60,
-    height: 60,
-    // flex: 1,
-    borderRadius: 15,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
-    //borderRadius: 75,
-  },
-  moduleButtonText: {
-    fontSize:14,
-    textDecorationLine: "underline",
-    marginTop: 5,
-    // backgroundColor: "transparent",
-
-  },
-  checkButton: {
-    padding: 10, 
-    width: 300,
   },
   preview: {
     flex: 1,
