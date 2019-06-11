@@ -290,7 +290,8 @@ class LearningManager:
 			return user_index
 		cur_map, cur_shuf = list(self.user_data[user_index])
 		#retrieves all past-due cards, shuffles them, updates state to represent that, and returns these card tokens
-		current_cards = [k for k in cur_map if cur_map[k][0]<current_time]
+		#yikes on this next line.
+		current_cards = [k for k in cur_map if dt.strptime(str(cur_map[k][0]), "%Y-%m-%d %H:%M:%S.%f")<current_time]
 		random.shuffle(current_cards)
 		cur_shuf = current_cards
 		self.user_data[user_index] = (cur_map, cur_shuf)
