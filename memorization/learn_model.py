@@ -595,7 +595,10 @@ def google_cloud_get_cards(request):
 	lm.add_user(username)
 	# lm = LearningManager()
 	cards = lm.get_today_cards(username)
-
+	if request_json['type'] is not None:
+		lm.save_to_firebase(request_json['type'])
+	else:
+		lm.save_to_firebase("test")
 	return jsonify(cards=cards)
 
 def google_cloud_update_knowledge(request):
