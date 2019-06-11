@@ -291,7 +291,7 @@ class LearningManager:
 		cur_map, cur_shuf = list(self.user_data[user_index])
 		#retrieves all past-due cards, shuffles them, updates state to represent that, and returns these card tokens
 		#yikes on this next line.
-		current_cards = [k for k in cur_map if dt.strptime(str(cur_map[k][0]), "%Y-%m-%d %H:%M:%S.%f")<current_time]
+		current_cards = [k for k in cur_map if dt.strptime(str(cur_map[k][0]), "%Y-%m-%dT%H:%M:%S.%f")<current_time]
 		random.shuffle(current_cards)
 		cur_shuf = current_cards
 		self.user_data[user_index] = (cur_map, cur_shuf)
@@ -567,7 +567,7 @@ def google_cloud_init():
 	"""
 	#letters except J and Z
 	tok = {"alphabet": ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'], 
-	       "numbers": ['0' '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+	       "numbers": ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 	       "test": ['a', 'b', 'c']}
 
 	for k in tok:
@@ -614,7 +614,7 @@ def google_cloud_update_knowledge(request):
 	if request_json['type'] is not None:
 		lm.get_from_firebase(request_json['type'])
 	else:
-		lm.get_from_firebase("user_data")
+		lm.get_from_firebase("test")
 	# lm = LearningManager()
 	cards = lm.update_knowledge(username, results)
 	if request_json['type'] is not None:
