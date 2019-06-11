@@ -73,11 +73,12 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
+    this.update_cards('numbers');    
     this.props.navigation.push('Learn', {
               sectionName: 'Numbers',
               type: 'Learn'
             });
-    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.cards_left = global.new_cards_lm;        
     global.curr_cards = 0;
     global.total_cards = 3;
 
@@ -165,6 +166,23 @@ export default class LearnMenuScreen extends React.Component {
               onPress={this.pressEtiquette.bind(this)}
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
           </View>*/}
+          <View style={styles.moduleButtonContainer}>
+            <View style={styles.CircleShapeView}>
+              <View style={styles.InnerCircleShapeView}>                        
+                <TouchableOpacity onPress={this.pressNumbers.bind(this)}>
+                  <Image
+                    style={styles.moduleButton}
+                    source={require('../../img/alphabet_signs/z.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity 
+              containerStyle={styles.moduleButtonText}
+              title="Numbers"
+              onPress={this.pressNumbers.bind(this)}
+            ><Text style={styles.moduleButtonText}>Numbers</Text></TouchableOpacity>
+          </View>  
         </View>
         <Button
           containerStyle={styles.button}
