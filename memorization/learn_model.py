@@ -404,22 +404,17 @@ class LearningManager:
 		"""
 		return self.firebase_name_prev
 
-	def delete_unused_firebase_data(self, firebase_id):
-		"""
-		Cleanup function to delete unused data. By default, save_to_firebase helps a bit with cleanup when used repeatedly, but if you run multiple instances
-		or something else like that you will need to run this periodically to keep the database from getting messy.
-		@param firebase_id: The name of the POST field returned by self.firebase.post that you wish to delete
-		"""
-		self.firebase.delete('user_data/', firebase_id)
 
-
-	def get_from_firebase(self, firebase_id):
+	def get_from_firebase(self, firebase_id=None):
 		"""
-		Retrieve a saved state from firebase. Must have a valid state to retrieve. Does not error check.
+		Retrieve a saved state from firebase. Must have a valid state to retrieve. Does not error check. Generally just run without arguments
 		@param firebase_id: the returned POST id to retrieve from
 		"""
 		retrieved_user_data = self.firebase.get('/user_data', None)
-		self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_user_data[firebase_id]
+		if firebase_id is None:
+			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_user_data[list(retrieved_user_data)[-1]]
+		else:
+			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_user_data[firebase_id]
 
 
 def dotline():
@@ -494,7 +489,7 @@ def test_learningManager(skip_long=False):
 
 	test.save_to_firebase()
 	newV2 = LearningManager([1], tokens_to_learn=['a','c','d'], minutes=False)
-	newV2.get_from_firebase(test.get_firebase_id())
+	newV2.get_from_firebase()
 	print("save/load functionality checks passed!")
 
 	print("testing ability to get extra cards, add users, and add cards")
