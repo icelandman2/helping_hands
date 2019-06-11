@@ -106,6 +106,14 @@ constructor(props) {
     }
   };
 
+  /*
+   * WORKAROUND ALERT!
+   * To get the RNCamera library to properly use the front camera on iOS,
+   * we needed to comment out the "onGoogleVisionBarcodesDetected" property on the 
+   * RNCamera tag. This solution was described here: https://github.com/react-native-community/react-native-camera/issues/2252
+   * and should be removed if/when the library is patched to fix this error.
+   */
+
   render() {
     return (
       <View style={styles.container}>
@@ -114,7 +122,7 @@ constructor(props) {
             this.camera = ref;
           }}
           style={styles.preview}
-          type={RNCamera.Constants.Type.back}
+          type={RNCamera.Constants.Type.front}
           flashMode={RNCamera.Constants.FlashMode.on}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
@@ -128,9 +136,9 @@ constructor(props) {
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}
-          onGoogleVisionBarcodesDetected={({ barcodes }) => {
+          /*{/*onGoogleVisionBarcodesDetected={({ barcodes }) => {
             console.log(barcodes);
-          }}
+          }}}*/
         />
 
         <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
