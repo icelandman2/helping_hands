@@ -18,8 +18,6 @@ export default class LearnMenuScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.state.deviceID = DeviceInfo.getUniqueID();
-    // console.log(this.state.deviceID);
   }  
   /*
    * function: pressAlphabet
@@ -31,7 +29,6 @@ export default class LearnMenuScreen extends React.Component {
   pressAlphabet = async function() {
     await this.update_cards('alphabet');    
     global.cards_left = global.new_cards_lm;
-    // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
 
@@ -42,7 +39,7 @@ export default class LearnMenuScreen extends React.Component {
       sectionName: 'Alphabet',
       type: 'Learn'
     });     
-};
+  };
 
   /*
    * function: pressEtiquette
@@ -53,17 +50,16 @@ export default class LearnMenuScreen extends React.Component {
    */
   pressEtiquette = async function() {
     await this.update_cards('etiquette');        
-    this.props.navigation.push('Learn', {
-              sectionName: 'Etiquette',
-              type: 'Learn'
-            });
-    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.cards_left = global.new_cards_lm;            
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
-
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
+    this.props.navigation.push('Learn', {
+      sectionName: 'Etiquette',
+      type: 'Learn'
+    });    
   };
 
   /*
@@ -78,7 +74,6 @@ export default class LearnMenuScreen extends React.Component {
     global.cards_left = global.new_cards_lm;        
     global.curr_cards = 0;
     global.total_cards = global.new_cards_lm.length;
-
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
@@ -114,15 +109,15 @@ export default class LearnMenuScreen extends React.Component {
         results: [0,0,0],
       }),
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        global.new_cards_lm = responseJson.cards;
-        console.log(global.new_cards_lm);
-        
-      })
-      .catch((error) =>{
-        console.error(error);
-      });
+    .then((response) => response.json())
+    .then((responseJson) => {
+      global.new_cards_lm = responseJson.cards;
+      console.log(global.new_cards_lm);
+      
+    })
+    .catch((error) =>{
+      console.error(error);
+    });
   }
 
   render() {
