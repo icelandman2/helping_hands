@@ -52,7 +52,7 @@ class Card extends React.Component {
     return (
       <View style={styles.card}>
         <Image source={images[this.props.name]} />
-        <Text style={styles.text}>{this.props.name}</Text>
+        <Text style={styles.text}>{this.props.name.toUpperCase()}</Text>
       </View>
     )
   }
