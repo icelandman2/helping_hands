@@ -553,7 +553,7 @@ def test_learningManager(skip_long=False):
 def google_cloud_parser(request):
 	request_json = request.get_json(silent=True)
 	if (request_json['init_gcloud']):
-		return google_cloud_init(request)
+		return google_cloud_init()
 	elif (request_json['get_cards']):
 		return google_cloud_get_cards(request)
 	elif request_json['update_knowledge']:
