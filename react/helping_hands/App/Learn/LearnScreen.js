@@ -54,19 +54,17 @@ export default class LearnScreen extends React.Component {
     global.type = type;
     global.section_name = sectionName;
 
-    // if (global.cards_left == []) {
-    //   this.props.navigation.pop();      
-    // } else {
-    //   global.current_sign = global.cards_left[0];      
-    // }
-    if (global.cards_left.length == 1) {
-      testQuestionText = global.current_sign.toUpperCase();
-    } else if (global.cards_left.length == 2) {
-      testQuestionText = global.current_sign.toUpperCase()+ " & " + global.cards_left[1].toUpperCase();
-    } else if (global.cards_left.length == 3) {
-      testQuestionText = global.current_sign.toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", & " + global.cards_left[2].toUpperCase();      
-    } else {
-      testQuestionText = global.current_sign.toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", " + global.cards_left[2].toUpperCase() + " & " + (global.cards_left.length - 3) + " more";            
+    if (!global.cards_left[0]) testQuestionText = "None!";
+    else {
+      if (global.cards_left.length == 1) {
+        testQuestionText = global.cards_left[0].toUpperCase();
+      } else if (global.cards_left.length == 2) {
+        testQuestionText = global.cards_left[0].toUpperCase()+ " & " + global.cards_left[1].toUpperCase();
+      } else if (global.cards_left.length == 3) {
+        testQuestionText = global.cards_left[0].toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", & " + global.cards_left[2].toUpperCase();      
+      } else {
+        testQuestionText = global.cards_left[0].toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", " + global.cards_left[2].toUpperCase() + " & " + (global.cards_left.length - 3) + " more";            
+      }
     }
 
     return (
