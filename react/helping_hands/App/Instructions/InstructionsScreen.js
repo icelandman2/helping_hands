@@ -34,7 +34,7 @@ export default class InstructionsScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
           <Text style={styles.headerText}>{type}</Text>
-          <Text style={styles.subHeaderText}>This view will provide the answers to frequently asked questions as well as general how-tos for the Helping Hands application.            
+          <Text style={styles.subHeaderText}>Visit the Learn menu to swipe through letters and/or numbers you do not know, as many times as you need to become comfortable. When you are ready, evaluate your signing ability on the Test menu! Check back frequently to keep your knowledge from becoming stale.            
           </Text>
         </View>                
       </View>
