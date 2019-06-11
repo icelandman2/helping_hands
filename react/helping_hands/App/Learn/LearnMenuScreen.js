@@ -82,10 +82,10 @@ export default class LearnMenuScreen extends React.Component {
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
-this.props.navigation.push('Learn', {
-              sectionName: 'Numbers',
-              type: 'Learn'
-            });    
+    this.props.navigation.push('Learn', {
+      sectionName: 'Numbers',
+      type: 'Learn'
+    });    
   };
 
 /*
@@ -185,11 +185,13 @@ this.props.navigation.push('Learn', {
             ><Text style={styles.moduleButtonText}>Numbers</Text></TouchableOpacity>
           </View>  
         </View>
-        <Button
-          containerStyle={styles.button}
-          title="Main Menu"
-          onPress={() => this.props.navigation.pop()}
-        />
+        <View style={styles.bottomContainerStyle}>
+          <Button
+            containerStyle={styles.checkButton}
+            title="Main Menu"
+            onPress={() => this.props.navigation.pop()}
+          />
+        </View>
       </View>
     );
   }

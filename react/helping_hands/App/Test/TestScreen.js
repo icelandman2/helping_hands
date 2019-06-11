@@ -56,11 +56,20 @@ export default class TestScreen extends React.Component {
     global.type = type;
 
     // global.current_sign = global.cards_left[global.rand_ind];
-    if (global.cards_left != []) {
-      global.current_sign = global.cards_left[0];
+    testQuestionText = "";
+    if (global.cards_left == []) {
+      this.props.navigation.pop();      
+    } else {
+      global.current_sign = global.cards_left[0];      
     }
-    else {
-      this.props.navigation.pop();
+    if (global.cards_left.length == 1) {
+      testQuestionText = global.current_sign.toUpperCase();
+    } else if (global.cards_left.length == 2) {
+      testQuestionText = global.current_sign .toUpperCase()+ " & " + global.cards_left[1].toUpperCase();
+    } else if (global.cards_left.length == 3) {
+      testQuestionText = global.current_sign.toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", & " + global.cards_left[2].toUpperCase();      
+    } else {
+      testQuestionText = global.current_sign.toUpperCase() + ", " + global.cards_left[1].toUpperCase() + ", " + global.cards_left[2].toUpperCase() + " & " + (global.cards_left.length - 3) + " more";            
     }
 
     return (
@@ -68,18 +77,18 @@ export default class TestScreen extends React.Component {
         <View style={styles.topContainerStyle}>
           <Text style={styles.headerText}>{type}</Text>
           <Text style={styles.subHeaderText}>{sectionName}</Text>
-          <Text>Cards Left: {global.cards_left.length}</Text>
+          <Text>Cards Left: {testQuestionText}</Text>
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>          
         {/*<SwipeCards style={{flex: 1}} />*/}
-        <Text style={styles.testQuestionStyle}>{global.current_sign.toUpperCase()}</Text>  
+        {<Text style={styles.testQuestionStyle}>{global.current_sign.toUpperCase()}</Text>} 
+        {/*<Text style={styles.testQuestionStyle}>{testQuestionText}</Text>*/} 
         <Text style={styles.paragraphText}>When you're ready, check your knowledge by pressing the button and submitting a photo!</Text>      
         <Button
           containerStyle={styles.checkButton}
           title="Check sign"
           onPress={() =>
             this.props.navigation.push('Camera')}/>
-{/*TODO:: get this button's position to function properly with*/}            
         <View style={styles.bottomContainerStyle}>
           <Button
             containerStyle={styles.checkButton}
