@@ -32,12 +32,11 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressAlphabet= async function() {
-    console.log("we are going to update cards now");
+    await this.update_cards('alphabet');            
     this.props.navigation.push('Test', {
               sectionName: 'Alphabet',
               type: 'Test'
             });
-    // this.update_cards('alphabet');        
     global.cards_left = global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
@@ -69,6 +68,33 @@ export default class TestMenuScreen extends React.Component {
     global.maybe_learned = [];
   };
 
+   /*
+   * function: pressNumbers
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "numbers" and 
+   * initializes global state variables to be the relevant words to practice signing
+   * according to the learning manager
+   */
+  pressNumbers = async function() {
+    
+    console.log("we are about to call update_cards(numbers)");
+    await this.update_cards('numbers');        
+    console.log("we JUST CALLED update_cards(numbers)");
+    console.log("we are about to set global.cards_left");        
+    global.cards_left = global.new_cards_lm;                
+    console.log("we JUST SET global.cards_left", global.cards_left);        
+    global.curr_cards = 0;
+    global.total_cards = global.cards_left.length;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+this.props.navigation.push('Test', {
+              sectionName: 'Numbers',
+              type: 'Test'
+            });    
+  };
+
   /*
    * function: update_knowledge()
    * ---------------------------------
@@ -80,7 +106,7 @@ export default class TestMenuScreen extends React.Component {
    * when necessary on visual interfaces
    */
   update_cards(cardsType) {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+     return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -99,7 +125,7 @@ export default class TestMenuScreen extends React.Component {
       .then((responseJson) => {
         global.new_cards_lm = responseJson.cards;
         console.log(global.new_cards_lm);
-        
+        global.cards_left = global.new_cards_lm;
       })
       .catch((error) =>{
         console.error(error);
@@ -150,6 +176,23 @@ export default class TestMenuScreen extends React.Component {
               onPress={this.pressEtiquette.bind(this)}
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
           </View>*/}
+          <View style={styles.moduleButtonContainer}>
+            <View style={styles.CircleShapeView}>
+              <View style={styles.InnerCircleShapeView}>                        
+                <TouchableOpacity onPress={this.pressNumbers.bind(this)}>
+                  <Image
+                    style={styles.moduleButton}
+                    source={require('../../img/alphabet_signs/z.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity 
+              containerStyle={styles.moduleButtonText}
+              title="Numbers"
+              onPress={this.pressNumbers.bind(this)}
+            ><Text style={styles.moduleButtonText}>Numbers</Text></TouchableOpacity>
+          </View>         
         </View>
         <Button
           containerStyle={styles.button}
