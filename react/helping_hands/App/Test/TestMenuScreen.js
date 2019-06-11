@@ -38,7 +38,7 @@ export default class TestMenuScreen extends React.Component {
               type: 'Test'
             });
     // this.update_cards('alphabet');        
-    global.cards_left = ["a","b","c"];//global.new_cards_lm;
+    global.cards_left = global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
 
