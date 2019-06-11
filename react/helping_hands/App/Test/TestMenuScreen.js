@@ -21,8 +21,6 @@ export default class TestMenuScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.state.deviceID = DeviceInfo.getUniqueID();
-    // console.log(this.state.deviceID);
   }
   /*
    * function: pressAlphabet
@@ -31,7 +29,7 @@ export default class TestMenuScreen extends React.Component {
    * initializes global state variables to be the relevant letters to practice signing
    * according to the learning manager
    */
-  pressAlphabet= async function() {
+  pressAlphabet = async function() {
     await this.update_cards('alphabet');            
     this.props.navigation.push('Test', {
       sectionName: 'Alphabet',
@@ -54,12 +52,12 @@ export default class TestMenuScreen extends React.Component {
    * initializes global state variables to be the relevant words to practice signing
    * according to the learning manager
    */
-  pressEtiquette= async function() {
+  pressEtiquette = async function() {
+    await this.update_cards('etiquette');
     this.props.navigation.push('Test', {
-              sectionName: 'Etiquette',
-              type: 'Test'
-            });
-    global.cards_left = ['hello', 'thanks', 'bye'];
+      sectionName: 'Etiquette',
+      type: 'Test'
+    });
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
     global.current_sign = global.cards_left[0];
@@ -76,23 +74,18 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    
-    console.log("we are about to call update_cards(numbers)");
-    await this.update_cards('numbers');        
-    console.log("we JUST CALLED update_cards(numbers)");
-    console.log("we are about to set global.cards_left");        
+    await this.update_cards('numbers');    
+    this.props.navigation.push('Test', {
+      sectionName: 'Numbers',
+      type: 'Test'
+    });        
     global.cards_left = global.new_cards_lm;                
-    console.log("we JUST SET global.cards_left", global.cards_left);        
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
     global.current_sign = global.cards_left[0];
     global.learned = [];
     global.not_learned = [];
-    global.maybe_learned = [];
-    this.props.navigation.push('Test', {
-      sectionName: 'Numbers',
-      type: 'Test'
-    });    
+    global.maybe_learned = [];   
   };
 
   /*
