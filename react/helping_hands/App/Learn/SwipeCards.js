@@ -51,8 +51,8 @@ class Card extends React.Component {
     this.setGlobal();
     return (
       <View style={styles.card}>
-        <Image source={images[this.props.name]} />
-        <Text style={styles.text}>{this.props.name.toUpperCase()}</Text>
+        <Image source={images[this.props.name.toLowerCase()]} />
+        <Text style={styles.text}>{this.props.name}</Text>
       </View>
     )
   }
@@ -84,7 +84,9 @@ class NoMoreCards extends Component {
 /*
  * class: SwipeCards
  * --------------------------------------------
- * This class controls the shuffling of the problems so that they are 
+ * This class controls the shuffling of the problems so that they are in
+ * a different order than the one the user may be used to practicing.
+ * In the long run this should help the user memorize the different symbols.
  */
 export default class extends React.Component {
   constructor(props) {
@@ -94,9 +96,10 @@ export default class extends React.Component {
     };
     var index = 0;
     for (index = 0; index < global.cards_left.length; index++){
-      this.state.cards.push({name: global.cards_left[index]});
+      this.state.cards.push({name: global.cards_left[index].toUpperCase()});
     }
-    this.state.cards = this.shuffle(this.state.cards);
+    //this.state.cards = this.shuffle(this.state.cards);
+    //global.cards_left = this.state.cards;
   }
 
   shuffle(array) {
@@ -119,20 +122,29 @@ export default class extends React.Component {
   }
 
   handleYup (card) {
-    global.cards_left = global.cards_left.filter(item => item !== card.name);
+    global.cards_left = global.cards_left.filter(item => item !== card.name.toLowerCase());
     global.learned.push(card.name);
     global.curr_cards = global.curr_cards+1;
+    if (global.cards_left.length > 0) {
+      global.current_sign = global.cards_left[global.curr_cards];
+    }
   }
   handleNope (card) {
     console.log(global.cards_left);
-    global.cards_left = global.cards_left.filter(item => item !== card.name);
+    global.cards_left = global.cards_left.filter(item => item !== card.name.toLowerCase());
     global.not_learned.push(card.name);
     global.curr_cards = global.curr_cards+1;
+    if (global.cards_left.length > 0) {
+      global.current_sign = global.cards_left[global.curr_cards];
+    }
   }
 
   handleMaybe (card) {
-    global.cards_left = global.cards_left.filter(item => item !== card.name);
+    global.cards_left = global.cards_left.filter(item => item !== card.name.toLowerCase());
     global.maybe_learned.push(card.name);
+    if (global.cards_left.length > 0) {
+      global.current_sign = global.cards_left[global.curr_cards];
+    }
   }
   render() {
     // If you want a stack of cards instead of one-per-one view, activate stack mode
