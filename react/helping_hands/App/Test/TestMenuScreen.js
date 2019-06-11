@@ -34,13 +34,13 @@ export default class TestMenuScreen extends React.Component {
   pressAlphabet= async function() {
     await this.update_cards('alphabet');            
     this.props.navigation.push('Test', {
-              sectionName: 'Alphabet',
-              type: 'Test'
-            });
+      sectionName: 'Alphabet',
+      type: 'Test'
+    });
     global.cards_left = global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
-
+    global.current_sign = global.cards_left[0];
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
@@ -62,7 +62,7 @@ export default class TestMenuScreen extends React.Component {
     global.cards_left = ['hello', 'thanks', 'bye'];
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
-
+    global.current_sign = global.cards_left[0];
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
@@ -85,14 +85,14 @@ export default class TestMenuScreen extends React.Component {
     console.log("we JUST SET global.cards_left", global.cards_left);        
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
-
+    global.current_sign = global.cards_left[0];
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
-this.props.navigation.push('Test', {
-              sectionName: 'Numbers',
-              type: 'Test'
-            });    
+    this.props.navigation.push('Test', {
+      sectionName: 'Numbers',
+      type: 'Test'
+    });    
   };
 
   /*
@@ -106,7 +106,7 @@ this.props.navigation.push('Test', {
    * when necessary on visual interfaces
    */
   update_cards(cardsType) {
-     return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+    return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -121,15 +121,15 @@ this.props.navigation.push('Test', {
         results: [0,0,0],
       }),
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        global.new_cards_lm = responseJson.cards;
-        console.log(global.new_cards_lm);
-        global.cards_left = global.new_cards_lm;
-      })
-      .catch((error) =>{
-        console.error(error);
-      });
+    .then((response) => response.json())
+    .then((responseJson) => {
+      global.new_cards_lm = responseJson.cards;
+      console.log(global.new_cards_lm);
+      global.cards_left = global.new_cards_lm;
+    })
+    .catch((error) =>{
+      console.error(error);
+    });
   }
 
   render() {
@@ -194,11 +194,14 @@ this.props.navigation.push('Test', {
             ><Text style={styles.moduleButtonText}>Numbers</Text></TouchableOpacity>
           </View>         
         </View>
-        <Button
-          containerStyle={styles.button}
-          title="Main Menu"
-          onPress={() => this.props.navigation.pop()}
-        />        
+        <View style={styles.bottomContainerStyle}>
+
+          <Button
+            containerStyle={styles.checkButton}
+            title="Main Menu"
+            onPress={() => this.props.navigation.pop()}
+          />   
+        </View>     
       </View>
     );
   }
