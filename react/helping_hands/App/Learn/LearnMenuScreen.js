@@ -29,11 +29,7 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */  
   pressAlphabet = async function() {
-    this.update_cards('alphabet');    
-    this.props.navigation.push('Learn', {
-              sectionName: 'Alphabet',
-              type: 'Learn'
-            });
+    await this.update_cards('alphabet');    
     global.cards_left = global.new_cards_lm;
     // global.cards_left = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     global.curr_cards = 0;
@@ -41,8 +37,12 @@ export default class LearnMenuScreen extends React.Component {
 
     global.learned = [];
     global.not_learned = [];
-    global.maybe_learned = [];
-  };
+    global.maybe_learned = []; 
+    this.props.navigation.push('Learn', {
+      sectionName: 'Alphabet',
+      type: 'Learn'
+    });     
+};
 
   /*
    * function: pressEtiquette
@@ -52,13 +52,14 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressEtiquette = async function() {
+    await this.update_cards('etiquette');        
     this.props.navigation.push('Learn', {
               sectionName: 'Etiquette',
               type: 'Learn'
             });
     global.cards_left = ['hello', 'thanks', 'bye'];
     global.curr_cards = 0;
-    global.total_cards = 3;
+    global.total_cards = global.cards_left.length;
 
     global.learned = [];
     global.not_learned = [];
@@ -73,18 +74,18 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    this.update_cards('numbers');    
-    this.props.navigation.push('Learn', {
-              sectionName: 'Numbers',
-              type: 'Learn'
-            });
+    await this.update_cards('numbers');    
     global.cards_left = global.new_cards_lm;        
     global.curr_cards = 0;
-    global.total_cards = 3;
+    global.total_cards = global.new_cards_lm.length;
 
     global.learned = [];
     global.not_learned = [];
     global.maybe_learned = [];
+this.props.navigation.push('Learn', {
+              sectionName: 'Numbers',
+              type: 'Learn'
+            });    
   };
 
 /*
@@ -98,7 +99,7 @@ export default class LearnMenuScreen extends React.Component {
    * when necessary on visual interfaces
    */
   update_cards(cardsType) {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+    return fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
