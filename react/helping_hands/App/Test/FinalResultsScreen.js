@@ -1,3 +1,14 @@
+import React, { Component } from "react";
+import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
+import { Button } from 'react-native-elements';
+import firebase from '../../config/firebase';
+import RNFetchBlob from 'rn-fetch-blob';
+import images from "../../img"
+import DeviceInfo from 'react-native-device-info';
+
+//general styles
+import styles from "../styles";
+
 /*
  * Module FinalResultsScreen
  * ---------------------------------
@@ -6,18 +17,13 @@
  * can receive cards tuned to the user's current progress. Allows the student to navigate back to 
  * the testing module select menu
  */
-import React, { Component } from "react";
-import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
-import { Button } from 'react-native-elements';
-import firebase from '../../config/firebase';
-import RNFetchBlob from 'rn-fetch-blob';
-import images from "../../img"
-
-import styles from "../styles";
-
 export default class FinalResultsScreen extends React.Component {
   constructor(props) {
     super(props);
+
+    //this.state.deviceID = DeviceInfo.getUniqueID();
+    //console.log(this.state.deviceID);
+
   }
 
   /*
@@ -43,24 +49,24 @@ export default class FinalResultsScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        get_cards: true,
+        init_gcloud: false,
+        get_cards: false,
         update_knowledge: true,
-        username: 1,
+        username: DeviceInfo.getUniqueID(),
+        type: 'cat',
         results: global.results_lm
       }),
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      console.log("Updated and we are successful in getting the response from server");
-    })
-    .catch((error) =>{
-      console.log("we had an error");
-      console.error(error);
-    });
   }
 
   render() {
     const {navigation} = this.props;  
+    global.learned = global.learned.filter(function(item, pos) {
+      return global.learned.indexOf(item) == pos;
+    })
+    global.not_learned = global.not_learned.filter(function(item, pos) {
+      return global.not_learned.indexOf(item) == pos;
+    })    
     this.update_knowledge();
 
     //calculating the right messages to display to the user -- how did they perform in their

@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 
+//global styles
 import styles from '../styles';
+import DeviceInfo from 'react-native-device-info';
 
 /*
  * class TestMenuScreen
@@ -17,7 +19,11 @@ import styles from '../styles';
 
 export default class TestMenuScreen extends React.Component {
 
-  
+  constructor(props) {
+    super(props);
+    // this.state.deviceID = DeviceInfo.getUniqueID();
+    // console.log(this.state.deviceID);
+  }
   /*
    * function: pressAlphabet
    * ------------------------------------------------------
@@ -27,12 +33,12 @@ export default class TestMenuScreen extends React.Component {
    */
   pressAlphabet= async function() {
     console.log("we are going to update cards now");
-    this.update_cards();    
     this.props.navigation.push('Test', {
               sectionName: 'Alphabet',
               type: 'Test'
             });
-    global.cards_left = global.new_cards_lm;
+    // this.update_cards('alphabet');        
+    global.cards_left = ["a","b","c"];//global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
 
@@ -73,7 +79,7 @@ export default class TestMenuScreen extends React.Component {
    * Should eventually be separated into its own class, a service module, to be included
    * when necessary on visual interfaces
    */
-  update_cards() {
+  update_cards(cardsType) {
     fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
       method: 'POST',
       headers: {
@@ -81,10 +87,12 @@ export default class TestMenuScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        init_gcloud: false,        
         get_cards: true,
-        update_knowledge: true,
-        username: 1,
-        results: [0,0,0]
+        update_knowledge: false,
+        username: DeviceInfo.getUniqueID(),
+        type: cardsType,
+        results: [0,0,0],
       }),
     })
       .then((response) => response.json())
