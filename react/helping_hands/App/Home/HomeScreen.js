@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 
+//general styles
 import styles from "../styles";
+
+import DeviceInfo from 'react-native-device-info';
 
 /*
  * class HomeScreen
@@ -18,6 +21,35 @@ export default class HomeScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = { isLoading: true}
+    this.state.deviceID = DeviceInfo.getUniqueID();
+    console.log(this.state.deviceID);
+  }
+
+  init_firebase() {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        init_gcloud: true,        
+        get_cards: false,
+        update_knowledge: false,
+        type: "alphabet",
+        username: DeviceInfo.getUniqueID(),
+        results: [0,0,0],
+      }),
+    })
+      // .then((response) => response.json())
+      // .then((responseJson) => {
+      //   global.new_cards_lm = responseJson.cards;
+      //   console.log(global.new_cards_lm);
+        
+      // })
+      // .catch((error) =>{
+      //   console.error(error);
+      // });
   }
 
   test_google_cloud() {
@@ -65,10 +97,12 @@ export default class HomeScreen extends React.Component {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        init_gcloud: false,        
         get_cards: true,
-        update_knowledge: true,
-        username: 1,
-        results: [0,0,0]
+        update_knowledge: false,
+        type: "alphabet",
+        username: this.state.deviceID,
+        results: [0,0,0],
       }),
     })
       .then((response) => response.json())
@@ -83,6 +117,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    // this.init_firebase();    
     this.update_cards();
   }
 

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import images from "../../img"
+
+//general styles
 import styles from '../styles';
 
 /*
@@ -28,7 +30,7 @@ export default class ResultsScreen extends React.Component {
  * call to navigate("FinalResults") (before rendering FinalResults), the app will crash if we do not 
  * handle this edge case.
  */  
-  goBackToSigns= async function() {
+  goBackToSigns = async function() {
     global.curr_cards = global.curr_cards+1;    
     if (global.cards_left.length !=1 ) {
       global.cards_left = global.cards_left.filter(item => item !== global.current_sign);
@@ -42,11 +44,28 @@ export default class ResultsScreen extends React.Component {
       this.props.navigation.navigate('FinalResults', {
         prediction: '1',
       });   
-      global.cards_left = global.cards_left.filter(item => item !== global.current_sign);        
+      //global.cards_left = global.cards_left.filter(item => item !== global.current_sign);        
     }
   };
-        
+     
+  overRide = async function() {
+    curr_results_length = global.results_lm.length;
+    global.results_lm[curr_results_length - 1] = 1;
+    this.goBackToSigns();
+  };   
 
+  renderOverrideButtonIfWrong() {
+    const prediction = this.props.navigation.getParam('prediction', 'default');    
+    if (prediction==(global.current_sign).toUpperCase()) {
+      return <Text></Text>;
+    } else {
+      return <Button
+          containerStyle={styles.button}
+          title="Override: I was right"
+          onPress={this.overRide.bind(this)}
+        />
+    }
+  }
   render() {
     const {navigation} = this.props;
     const prediction = navigation.getParam('prediction', 'default');
@@ -82,6 +101,7 @@ export default class ResultsScreen extends React.Component {
           title="Continue"
           onPress={this.goBackToSigns.bind(this)}
         />
+        {this.renderOverrideButtonIfWrong()}
       </View>
     );
   }

@@ -3,10 +3,12 @@ import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleShee
 import { Button } from 'react-native-elements';
 import SwipeCards from './SwipeCards.js'
 import * as Progress from 'react-native-progress';
+
+//general styles
 import styles from '../styles';
 
 /*
- * class LearnMScreen
+ * class LearnScreen
  * ------------------------------------------------------
  * The student receives a stack of swipe cards that they will practice signing
  * outside of the app. If a student feels that they have gained competence with a sign, theyy

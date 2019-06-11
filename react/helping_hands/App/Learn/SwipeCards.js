@@ -9,11 +9,27 @@ import SwipeCards from 'react-native-swipe-cards';
 
 import images from "../../img"
 
+/*
+ * Module: SwipeCards
+ * --------------------------------------------
+ * This is the module containing the Learning Module's problem cards that can be swiped left or right 
+ * on for a user to establish whether they need more practice on a problem or whether they have
+ * learned it to their satisfaction.
+*/
+
+/*
+ * class: Card
+ * --------------------------------------------
+ * This is the base class that contains the prooblem image and its english name.
+ * It is strictly visual other than definining its own state and magic number.
+ * 
+ */
+
 class Card extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state ={ hitOnce: true, magic: global.magic}
+    this.state = { hitOnce: true, magic: global.magic};
 
     global.magic = global.magic + 1;
 
@@ -42,6 +58,13 @@ class Card extends React.Component {
   }
 }
 
+/*
+ * class: NoMoreCards
+ * --------------------------------------------
+ * This is the class, strictly visual, that is displayed once all cards are 
+ * swiped on by the user.
+ * 
+ */
 class NoMoreCards extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +81,11 @@ class NoMoreCards extends Component {
   }
 }
 
-
+/*
+ * class: SwipeCards
+ * --------------------------------------------
+ * This class controls the shuffling of the problems so that they are 
+ */
 export default class extends React.Component {
   constructor(props) {
     super(props);

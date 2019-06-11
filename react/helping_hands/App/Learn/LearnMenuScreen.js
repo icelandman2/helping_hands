@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
+import DeviceInfo from 'react-native-device-info';
+
+//general styles
 import styles from '../styles';
 
 /*
@@ -12,7 +15,21 @@ import styles from '../styles';
  */
 
 export default class LearnMenuScreen extends React.Component {
-  pressAlphabet= async function() {
+
+  constructor(props) {
+    super(props);
+    // this.state.deviceID = DeviceInfo.getUniqueID();
+    // console.log(this.state.deviceID);
+  }  
+  /*
+   * function: pressAlphabet
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "alphabet" and 
+   * initializes global state variables to be the relevant letters to practice signing
+   * according to the learning manager
+   */  
+  pressAlphabet = async function() {
+    this.update_cards('alphabet');    
     this.props.navigation.push('Learn', {
               sectionName: 'Alphabet',
               type: 'Learn'
@@ -27,7 +44,14 @@ export default class LearnMenuScreen extends React.Component {
     global.maybe_learned = [];
   };
 
-  pressEtiquette= async function() {
+  /*
+   * function: pressEtiquette
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "etiquette" and 
+   * initializes global state variables to be the relevant words to practice signing
+   * according to the learning manager
+   */
+  pressEtiquette = async function() {
     this.props.navigation.push('Learn', {
               sectionName: 'Etiquette',
               type: 'Learn'
@@ -40,6 +64,64 @@ export default class LearnMenuScreen extends React.Component {
     global.not_learned = [];
     global.maybe_learned = [];
   };
+
+  /*
+   * function: pressNumbers
+   * ------------------------------------------------------
+   * initializes TestScreen class with props.sectionName "numbers" and 
+   * initializes global state variables to be the relevant words to practice signing
+   * according to the learning manager
+   */
+  pressNumbers = async function() {
+    this.props.navigation.push('Learn', {
+              sectionName: 'Numbers',
+              type: 'Learn'
+            });
+    global.cards_left = ['hello', 'thanks', 'bye'];
+    global.curr_cards = 0;
+    global.total_cards = 3;
+
+    global.learned = [];
+    global.not_learned = [];
+    global.maybe_learned = [];
+  };
+
+/*
+   * function: update_knowledge()
+   * ---------------------------------
+   * Calls the Google Cloud Function running at 
+   * https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage
+   * and receives the cards that the user should practice. Updates global state variables
+   * to handle the presentation of the proper learning cards for the student.
+   * Should eventually be separated into its own class, a service module, to be included
+   * when necessary on visual interfaces
+   */
+  update_cards(cardsType) {
+    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        init_gcloud: false,        
+        get_cards: true,
+        update_knowledge: false,
+        username: DeviceInfo.getUniqueID(),
+        type: cardsType,
+        results: [0,0,0],
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        global.new_cards_lm = responseJson.cards;
+        console.log(global.new_cards_lm);
+        
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
 
   render() {
     const {navigation} = this.props;

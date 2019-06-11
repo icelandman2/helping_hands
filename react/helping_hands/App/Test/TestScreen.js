@@ -48,6 +48,7 @@ export default class TestScreen extends React.Component {
 
 
   render() {
+    console.log(global.cards_left);
     const {navigation} = this.props;
     const type = navigation.getParam('type', 'Test');
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
@@ -61,12 +62,13 @@ export default class TestScreen extends React.Component {
     else {
       this.props.navigation.pop();
     }
+
     return (
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
           <Text style={styles.headerText}>{type}</Text>
           <Text style={styles.subHeaderText}>{sectionName}</Text>
-          <Text>Cards Left: {global.cards_left.toString()}</Text>
+          <Text>Cards Left: {global.cards_left.length}</Text>
           <Progress.Bar progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
         </View>          
         {/*<SwipeCards style={{flex: 1}} />*/}
