@@ -386,14 +386,15 @@ class LearningManager:
 			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_tuple
 
 
-	def save_to_firebase(self):
+	def save_to_firebase(self, data_type):
 		"""
 		Saves the current state to firebase. Watch out for asynchronous issues. Hoping to update to just get data for a single user at some point.
 		"""
+		data_str = "/" + data_type
 		user_data_to_store = (self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time)
-		storage_id = self.firebase.post('/user_data', user_data_to_store)
+		storage_id = self.firebase.post(data_str, user_data_to_store)
 		if len(self.firebase_name_prev)>1:
-			self.firebase.delete('/user_data', self.firebase_name_prev)
+			self.firebase.delete(data_str, self.firebase_name_prev)
 		self.firebase_name_prev = storage_id['name']
 
 	def get_firebase_id(self):
@@ -405,12 +406,13 @@ class LearningManager:
 		return self.firebase_name_prev
 
 
-	def get_from_firebase(self, firebase_id=None):
+	def get_from_firebase(self, data_type, firebase_id=None):
 		"""
 		Retrieve a saved state from firebase. Must have a valid state to retrieve. Does not error check. Generally just run without arguments
 		@param firebase_id: the returned POST id to retrieve from
 		"""
-		retrieved_user_data = self.firebase.get('/user_data', None)
+		data_str = "/" + data_type
+		retrieved_user_data = self.firebase.get(data_str, None)
 		if firebase_id is None:
 			self.users_ordered, self.user_data, self.min_ease, self.max_ease, self.minutes, self.penalty, self.map, self.init_recall_time = retrieved_user_data[list(retrieved_user_data)[-1]]
 		else:
@@ -487,9 +489,9 @@ def test_learningManager(skip_long=False):
 		assert len(newV.get_today_cards(1)) == 0, "failed to retrieve users properly"
 	assert len(newV.get_today_cards(3)) == 3, "failed to retrieve users properly"
 
-	test.save_to_firebase()
+	test.save_to_firebase("test")
 	newV2 = LearningManager([1], tokens_to_learn=['a','c','d'], minutes=False)
-	newV2.get_from_firebase()
+	newV2.get_from_firebase("test")
 	print("save/load functionality checks passed!")
 
 	print("testing ability to get extra cards, add users, and add cards")
@@ -538,43 +540,83 @@ def test_learningManager(skip_long=False):
 
 """
 {
+  "init_gcloud": true,
   "get_cards": false,
   "update_knowledge": true,
   "username": 1,
-  "results": [0, 1, 1]
+  "results": [0, 1, 1],
+  "type": "alphabet"
 }
 """
 
 	
 def google_cloud_parser(request):
 	request_json = request.get_json(silent=True)
-	if (request_json['get_cards']):
+	if (request_json['init_gcloud']):
+		return google_cloud_init(request)
+	elif (request_json['get_cards']):
 		return google_cloud_get_cards(request)
 	elif request_json['update_knowledge']:
 		return google_cloud_update_knowledge(request)
 
+
+def google_cloud_init():
+	"""
+	Function to init states for Firebase. Must be called prior to any user usage.
+	"""
+	#letters except J and Z
+	tok = {"alphabet": ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'], 
+	       "numbers": ['0' '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+	       "test": ['a', 'b', 'c']}
+
+	for k in tok:
+		lm = LearningManager(['test_user'], tokens_to_learn=tok[k], minutes=False)
+		if k is not None:
+			lm.save_to_firebase(k)
+
+	#return jsonify(cards=cards)
+
 def google_cloud_get_cards(request):
+	"""
+	Get cards based on the request for the given user.
+	@param request: The request being made
+	@return json object of the cards to study for the given user as given by request.
+	"""
 	request_json = request.get_json(silent=True)
 	username = request_json['username']
 
-	tokens = ['a', 'b', 'c']
-
-	lm = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
+	lm = LearningManager(["invalid"], tokens_to_learn=[], minutes=False)
+	if request_json['type'] is not None:
+		lm.get_from_firebase(request_json['type'])
+	else:
+		lm.get_from_firebase("test")
+	#ensure user is in db
+	lm.add_user(username)
 	# lm = LearningManager()
 	cards = lm.get_today_cards(username)
 
 	return jsonify(cards=cards)
 
 def google_cloud_update_knowledge(request):
+	"""
+	Update knowledge and save the new state to firebase. Does not currently handle concurrency issues.
+	@param request: the json request
+	"""
 	request_json = request.get_json(silent=True)
 	username = request_json['username']
 	results = request_json['results']
 
-	tokens = ['a', 'b', 'c']
-
-	lm = LearningManager([1, 2, 3, 4], tokens_to_learn=tokens, minutes=True)
+	lm = LearningManager(["invalid"], tokens_to_learn=[], minutes=True)
+	if request_json['type'] is not None:
+		lm.get_from_firebase(request_json['type'])
+	else:
+		lm.get_from_firebase("user_data")
 	# lm = LearningManager()
 	cards = lm.update_knowledge(username, results)
+	if request_json['type'] is not None:
+		lm.save_to_firebase(request_json['type'])
+	else:
+		lm.save_to_firebase("test")
 
 
 if __name__ == '__main__':
