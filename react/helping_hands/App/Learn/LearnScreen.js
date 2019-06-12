@@ -35,13 +35,20 @@ export default class LearnScreen extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   animate() {
     let progress = 0;
     this.setState({ progress });
     if (!this._isMounted) return;
-    setTimeout(() => {
+    setTimeout(() => {     
+        if (!this._isMounted) return;        
+     
       this.setState({ indeterminate: false });
       setInterval(() => {
+        if (!this._isMounted) return;        
         progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
         this.setState({ progress });
       }, 500);
