@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 
+//general styles
+import styles from "../styles";
+
 export default class InstructionsScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -34,15 +37,15 @@ export default class InstructionsScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.topContainerStyle}>
           <Text style={styles.headerText}>{type}</Text>
-          <Text style={styles.subHeaderText}>Visit the Learn menu to swipe through letters and/or numbers you do not know, as many times as you need to become comfortable. When you are ready, evaluate your signing ability on the Test menu! Check back frequently to keep your knowledge from becoming stale.            
-          </Text>
+          <Text style={localStyles.subHeaderText}>Visit the Learn menu to swipe through letters and/or numbers you do not know, as many times as you need to become comfortable.</Text>
+          <Text style={localStyles.subHeaderText}>When you are ready, evaluate your signing ability on the Test menu! Check back frequently to keep your knowledge from becoming stale.</Text>          
         </View>                
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   baseText: {
 
   },
@@ -56,11 +59,13 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
     margin: 20,
+    alignItems: "center",
+    justifyContent: "center",       
   },
   subHeaderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
+    fontSize: 18,
+    //fontWeight: 'bold',
+    margin: 15,
   },
   paragraphText: {
     fontSize: 14,
