@@ -149,6 +149,7 @@ export default class LearnMenuScreen extends React.Component {
           <Text style={styles.headerText}>Learn</Text>
         </View>
         <View style={styles.moduleContainerStyle}>
+          {/*Here is where the first module button starts*/}
           <View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>  
@@ -165,6 +166,7 @@ export default class LearnMenuScreen extends React.Component {
               onPress={this.pressAlphabet.bind(this)}
             ><Text style={styles.moduleButtonText}>Alphabet</Text></TouchableOpacity>
           </View>
+          {/*Here is where the next module button starts -- currently disabled*/}
           {/*<View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>  
@@ -182,6 +184,7 @@ export default class LearnMenuScreen extends React.Component {
               onPress={this.pressEtiquette.bind(this)}
             ><Text style={styles.moduleButtonText}>Basic Etiquette</Text></TouchableOpacity>
           </View>*/}
+          {/*Here is where the next module button starts*/}
           <View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>                        

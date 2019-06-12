@@ -57,6 +57,7 @@ export default class TestScreen extends React.Component {
     const type = navigation.getParam('type', 'Test');
     const sectionName = navigation.getParam('sectionName', 'Alphabet');
 
+    global.section_name = sectionName;
     global.type = type;
 
     // global.current_sign = global.cards_left[global.rand_ind];
