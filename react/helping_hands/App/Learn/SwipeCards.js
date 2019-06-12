@@ -121,7 +121,11 @@ export default class extends React.Component {
   }
 
   handleYup (card) {
+    console.log("we need to remove", card.name);
+    console.log("current cards_left ", global.cards_left.length);
+    console.log("current front of list is ", global.cards_left[0]);
     global.cards_left = global.cards_left.filter(item => item !== card.name.toLowerCase());
+    console.log("current cards_left ", global.cards_left.length);    
     global.learned.push(card.name);
     global.curr_cards = global.curr_cards+1;
     if (global.cards_left.length > 0) {
