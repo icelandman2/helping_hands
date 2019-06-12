@@ -47,6 +47,8 @@
 		3E570E43F5D54B7DA8E6E71E /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50BEA76F15424BFEB8CCBE47 /* AntDesign.ttf */; };
 		41C9AC4E02AC4BFEAAE3A931 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE61FC48C7DD47A2AFBAB597 /* SimpleLineIcons.ttf */; };
 		42CEB47426DD409F9E4DAC45 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB2003D36674FE98721776B /* libRNVectorIcons.a */; };
+		593189CD22B0E27A002A1C2A /* AppIcon.appiconset in Resources */ = {isa = PBXBuildFile; fileRef = 5931899E22B0E27A002A1C2A /* AppIcon.appiconset */; };
+		593189CF22B0E2DB002A1C2A /* HelpingHandsLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 593189CE22B0E2DB002A1C2A /* HelpingHandsLogo.png */; };
 		6B1E1AAFD4EB44DAA813B630 /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 130DBFFCF28F4422A33D670A /* libRNGestureHandler-tvOS.a */; };
 		6FE7FCA165CD4ECAA30C854E /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DED39EB39DB64C0A8F7C8396 /* Foundation.ttf */; };
 		7B2F4E44DDE948EFA9B788F7 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE638FC1B2340A2AD19CE82 /* libRNGestureHandler.a */; };
@@ -439,6 +441,8 @@
 		529BD8B360AF4AA1AC413581 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		5566023D71464A49832610F7 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		55AC38D45C0C4880945F3DD0 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		5931899E22B0E27A002A1C2A /* AppIcon.appiconset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppIcon.appiconset; sourceTree = "<group>"; };
+		593189CE22B0E2DB002A1C2A /* HelpingHandsLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HelpingHandsLogo.png; path = ../img/HelpingHandsLogo.png; sourceTree = "<group>"; };
 		5968FBEE274F4454B5659C13 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6222A7DB65AC45B3BFB6E202 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -617,8 +621,10 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				5931899E22B0E27A002A1C2A /* AppIcon.appiconset */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				593189CE22B0E2DB002A1C2A /* HelpingHandsLogo.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = helping_hands;
@@ -1376,6 +1382,7 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				3E570E43F5D54B7DA8E6E71E /* AntDesign.ttf in Resources */,
 				E1A2BE3F049748908EBE6F17 /* Entypo.ttf in Resources */,
+				593189CD22B0E27A002A1C2A /* AppIcon.appiconset in Resources */,
 				D80D58563396447292052249 /* EvilIcons.ttf in Resources */,
 				2C290F54928A4BD998FCC279 /* Feather.ttf in Resources */,
 				D335FF1861634467854EC3F9 /* FontAwesome.ttf in Resources */,
@@ -1389,6 +1396,7 @@
 				DC5B9C5EBC034E09B2F186F0 /* Octicons.ttf in Resources */,
 				41C9AC4E02AC4BFEAAE3A931 /* SimpleLineIcons.ttf in Resources */,
 				2E3910763B4049D5A4BB460C /* Zocial.ttf in Resources */,
+				593189CF22B0E2DB002A1C2A /* HelpingHandsLogo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

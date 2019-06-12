@@ -80,19 +80,46 @@ constructor(props) {
         var prediction = "DEFAULT";
 
         //post the downloaded image to the ASL model running as a google cloud function
-        fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            image_url: image_url,
-            token: token
+      //   fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
+      //     method: 'POST',
+      //     headers: {
+      //       Accept: 'application/json',
+      //       'Content-Type': 'application/json'
+      //     },
+      //     body: JSON.stringify({
+      //       image_url: image_url,
+      //       token: token
 
-          }),
+      //     }),
+      //   })
+      //   .then((response) => response.json())
+      //   .then((responseJson) => {
+      //     //navigate to the results page to report whether the student got the sign right or wrong
+      //     nav.navigate('Results', {
+      //       prediction: responseJson.sign,
+      //     });
+      //   })
+      //   .catch((error) =>{
+      //     console.error(error);
+      //   });
+      // });
+      //post the downloaded image to the ASL model running as a google cloud function
+        var gcloud_url = 'https://us-central1-helping-hands-cs194.cloudfunctions.net/test10';
+        if (global.section_name != "Alphabet") {
+          gcloud_url = 'https://us-central1-helping-hands-cs194.cloudfunctions.net/test10-numbers'
+        }
+        fetch(gcloud_url, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            image_url: image_url,
+            token: token
+          }),
         })
-        .then((response) => response.json())
+        .then((response) => response.json())
         .then((responseJson) => {
           //navigate to the results page to report whether the student got the sign right or wrong
           nav.navigate('Results', {
@@ -101,11 +128,10 @@ constructor(props) {
         })
         .catch((error) =>{
           console.error(error);
-        });
+        })
       });
-    }
-  };
-
+  }
+}
   /*
    * WORKAROUND ALERT!
    * To get the RNCamera library to properly use the front camera on iOS,
