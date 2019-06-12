@@ -3,7 +3,7 @@
 </p>
 
 ## Synopsis
-Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing.
+Helping Hands is an interactive app that makes learning sign language fun and easy! Our app has modules of increasing complexity for language learning, and uses computer vision to provide real-time feedback of student signing. Please see our [Wiki](https://github.com/StanfordCS194/HelpingHands/wiki) for detailed implementation information and analysis of the design decisions we made along the way!
 
 ## Team Members
 Our app was built by an amazing team of engineers!
