@@ -30,16 +30,25 @@ export default class LearnScreen extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.animate();
+
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   animate() {
     let progress = 0;
     this.setState({ progress });
     if (!this._isMounted) return;
-    setTimeout(() => {
+    setTimeout(() => {     
+        if (!this._isMounted) return;        
+     
       this.setState({ indeterminate: false });
       setInterval(() => {
+        if (!this._isMounted) return;        
         progress = parseFloat(global.curr_cards)/parseFloat(global.total_cards);
         this.setState({ progress });
       }, 500);
@@ -70,11 +79,23 @@ export default class LearnScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.topContainerStyle}>
-          <Text style={styles.headerText}>{type}</Text>
-          <Text style={styles.subHeaderText}>{sectionName}</Text>
-          <Text>Cards Left: {testQuestionText}</Text>
-          <Progress.Bar color = "#2089Dc" progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+        <View style={localStyles.topContainerStyle}>
+          <View style={localStyles.moduleButtonContainer}>
+            <View style={styles.CircleShapeView}>
+              <View style={styles.InnerCircleShapeView}>  
+                  <Image
+                    style={styles.moduleButton, localStyles.testStyle}
+                    source={require('../../img/learn.png')}
+                  />
+              </View>
+            </View>  
+           <Text style={localStyles.moduleButtonText}>{type}</Text>
+          </View>         
+          {/*<Text style={styles.headerText}>{type}</Text>*/}
+          <Text style={localStyles.subHeaderText}>{sectionName}</Text>
+          <Text>Cards Left: {testQuestionText}</Text>          
+          <Progress.Bar style={styles.pbStyle} height={25} color = "#2089Dc" progress={parseFloat(global.curr_cards)/parseFloat(global.total_cards)} width={200} />          
+          <Text>Swipe right if learned, or swipe left to study more !</Text>          
           <SwipeCards style={styles.swipeCardsStyle}/>   
           {/*<Text>Current card: {global.current_sign}</Text>*/}
         </View>
@@ -97,3 +118,47 @@ export default class LearnScreen extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  subHeaderText: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    // marginBottom: 10,
+    position: "relative",
+    top: -2,
+  },  
+  topContainerStyle: {
+    position: 'absolute',
+    top: 0,
+    alignItems: "center",
+    justifyContent: "center",   
+  },  
+  moduleButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 8,
+  }, 
+moduleButtonContainer: {
+    margin: 30,
+    marginBottom: 0,
+    marginTop: 20,
+    alignItems: "center",
+//    justifyContent: "center",
+  },  
+  learnStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -4,
+  },
+  testStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -1,
+  },  
+});
