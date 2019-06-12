@@ -21,6 +21,16 @@ export default class TestMenuScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    this._isMounted = false;
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    // this._isMounted && this.getImage(this.props.item.image);    
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   /*
    * function: pressAlphabet
@@ -30,7 +40,11 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressAlphabet = async function() {
-    await this.update_cards('alphabet');            
+    let alphabetUri = await this.update_cards('alphabet'); 
+    this._isMounted && this.setState({
+        uri: { alphabetUri },
+        ready: true
+    });          
     this.props.navigation.push('Test', {
       sectionName: 'Alphabet',
       type: 'Test'
@@ -53,7 +67,11 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressEtiquette = async function() {
-    await this.update_cards('etiquette');
+    let etiquetteUri = await this.update_cards('etiquette');
+    this._isMounted && this.setState({
+        uri: { etiquetteUri },
+        ready: true
+    });    
     this.props.navigation.push('Test', {
       sectionName: 'Etiquette',
       type: 'Test'
@@ -74,7 +92,11 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    await this.update_cards('numbers');    
+    let numbersUri = await this.update_cards('numbers');  
+    this._isMounted && this.setState({
+        uri: { numbersUri },
+        ready: true
+    });        
     this.props.navigation.push('Test', {
       sectionName: 'Numbers',
       type: 'Test'
@@ -141,7 +163,7 @@ export default class TestMenuScreen extends React.Component {
                   this.pressAlphabet.bind(this)
                 }>
                   <Image
-                    style={styles.moduleButton}
+                    style={localStyles.alphabetStyle}
                     source={require('../../img/alphabet_signs/a.png')}
                   />
                 </TouchableOpacity>
@@ -188,7 +210,6 @@ export default class TestMenuScreen extends React.Component {
           </View>         
         </View>
         <View style={styles.bottomContainerStyle}>
-
           <Button
             containerStyle={styles.checkButton}
             title="Main Menu"
@@ -199,3 +220,15 @@ export default class TestMenuScreen extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  alphabetStyle: {
+    width: 58,
+    height: 58,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginRight: -5,
+    marginTop: 3,
+  } 
+});

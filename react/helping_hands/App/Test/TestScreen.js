@@ -29,6 +29,9 @@ export default class TestScreen extends React.Component {
     this.animate();
   }
 
+  componentWillUnMount() {
+    if (this.state.waitedUpdate) this.state.waitedUpdate.cancel();
+  }
   /*
    * function animate()
    * ------------------------------------------------------------
@@ -37,6 +40,7 @@ export default class TestScreen extends React.Component {
   animate() {
     let progress = 0;
     this.setState({ progress });
+    if (!this._isMounted) return;
     setTimeout(() => {
       this.setState({ indeterminate: false });
       setInterval(() => {

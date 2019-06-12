@@ -134,7 +134,7 @@ export default class LearnMenuScreen extends React.Component {
               <View style={styles.InnerCircleShapeView}>  
                 <TouchableOpacity onPress={this.pressAlphabet.bind(this)}>
                   <Image
-                    style={styles.moduleButton}
+                    style={localStyles.alphabetStyle}
                     source={require('../../img/alphabet_signs/a.png')}
                   />
                 </TouchableOpacity>
@@ -191,3 +191,15 @@ export default class LearnMenuScreen extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  alphabetStyle: {
+    width: 58,
+    height: 58,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginRight: -5,
+    marginTop: 3,
+  },
+});
