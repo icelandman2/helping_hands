@@ -41,6 +41,8 @@ module.exports = StyleSheet.create({
     fontSize: 64,
     fontWeight: 'bold',
     margin: 25,
+    marginTop: 115,
+    marginBottom: 10,
   },
   bottomContainerStyle: {
     position: 'absolute',
@@ -111,8 +113,13 @@ module.exports = StyleSheet.create({
     fontFamily: 'System',
 
   },
+  pbStyle: {
+    // height: 40,    
+    margin: 8,
+  },
   checkButton: {
     padding: 10, 
     width: 300,
+    borderRadius: 10,
   },
 });

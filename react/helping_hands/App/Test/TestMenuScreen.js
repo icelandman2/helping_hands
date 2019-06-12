@@ -232,5 +232,39 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fff',
     marginRight: -5,
     marginTop: 3,
-  } 
+  },
+  topContainerStyle: {
+    position: 'absolute',
+    top: 0,
+    alignItems: "center",
+    justifyContent: "center",   
+  },  
+  moduleButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 10,
+  }, 
+moduleButtonContainer: {
+    margin: 30,
+    marginBottom: 5,
+    // marginTop: 0,
+    alignItems: "center",
+//    justifyContent: "center",
+  },  
+  learnStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -4,
+  },
+  testStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -1,
+  },  
 });

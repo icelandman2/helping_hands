@@ -35,7 +35,7 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */  
   pressAlphabet = async function() {
-  let alphabetUri = await this.update_cards('alpabet'); 
+    let alphabetUri = await this.update_cards('alphabet'); 
     this._isMounted && this.setState({
         uri: { alphabetUri },
         ready: true
