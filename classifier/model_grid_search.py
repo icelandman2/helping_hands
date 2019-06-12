@@ -7,7 +7,6 @@ from torch.optim import lr_scheduler
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
-#import matplotlib.pyplot as plt
 import time
 import os
 import copy
@@ -32,12 +31,11 @@ data_transforms = {
     ]),
 }
 
-#data_dir = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/data/'
-#model_output_path = '/Users/swetharevanur/Documents/spring/cs194w/pytorch-asl/classifier/models/resnet18.pt'
 data_dir = '../../data/'
 model_output_folder = '~/Team-5/classifier/exps/'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+## Displays given image 
 def imshow(inp, title = None):
     """Imshow for Tensor."""
     inp = inp.numpy().transpose((1, 2, 0))
@@ -51,8 +49,10 @@ def imshow(inp, title = None):
     plt.pause(0.001)  # pause a bit so that plots are updated
 
 
+## Function: train_model ##
 # Performs training with specified models and parameters and saves
-# model weights and loss/accuracy to files in models/logs folders
+# model weights and loss/accuracy on training set and validation set
+# to files in models/logs folders
 def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, model_name, model_output_log, num_epochs = 5):
     model_output_params = model_output_folder + "models/" + model_name + ".pt"
     
@@ -145,6 +145,8 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
     torch.save(best_model_wts, model_output_path)
     return model, best_acc
 
+## Function: visualize_model ##
+# Graphs validation progress
 def visualize_model(model, num_images = 6):
     was_training = model.training
     model.eval()
@@ -171,9 +173,10 @@ def visualize_model(model, num_images = 6):
                     return
         model.train(mode = was_training)
         
+## Function: trainer ## 
 # Parameters for model learning are defined here, including optimizer, 
 # optimizer hyperparameters, learning rates, epochs. Calls train_model()
-# for actual training 
+# for actual training. Receives torchvision.model to run from main().
 def trainer(model_name, model):
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) 
                       for x in ['train', 'val']}
@@ -223,6 +226,8 @@ def trainer(model_name, model):
                              num_epochs)
     return model_conv
 
+## Function: predictor ##
+# Performs predictions on validation set
 def predictor(model):
     # predict on val compute F1 score
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) 
@@ -263,6 +268,7 @@ def predictor(model):
         
     return probs_list, preds_list, f1
 
+## Function: main ##
 # Models to be tested are defined here (PyTorch --> torchvision.models)
 # and passed to trainer()
 def main():
