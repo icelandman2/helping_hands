@@ -14,7 +14,7 @@ Swetha Revanur | <img src="team_headshots/swetha.png" alt="Swetha Revanur" title
 Matt Linker | <img src="team_headshots/matt.jpg" alt="Matt Linker" title="Matt Linker" width="150"> | Completed literature review about models and pedagogy, designed and built learning manager, wrote [Learning Model wiki](https://github.com/StanfordCS194/HelpingHands/wiki/Learning-Model)
 Gabriel Garza | <img src="team_headshots/gabriel.jpeg" alt="Gabriel Garza" title="Gabriel Garza" width="150"> | Worked on frontend development, refactored app for modular design, did UI design, wrote [Frontend wiki](https://github.com/StanfordCS194/HelpingHands/wiki/Mobile-Application) 
 Andrew Narcomey | <img src="team_headshots/andrew.jpeg" alt="Andrew Narcomey" title="Andrew Narcomey" width="150"> | Worked on artificial data generation, trained models
-Christina Li | <img src="team_headshots/tina.jpg" alt="Christina Li" title="Christina Li" width="150"> | wrote [Backend wiki](https://github.com/StanfordCS194/HelpingHands/wiki/Integration) 
+Christina Li | <img src="team_headshots/tina.jpg" alt="Christina Li" title="Christina Li" width="150"> | Worked on frontend development, set up basics of mobile app, integrated computer vision model and learning model with Google Cloud, wrote [Backend wiki](https://github.com/StanfordCS194/HelpingHands/wiki/Integration) 
 
 ## Profiles
 | Member        | Skills           | Personal Traits  | Desired Growth | Weaknesses 
