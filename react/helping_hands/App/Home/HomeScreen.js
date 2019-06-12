@@ -76,7 +76,7 @@ export default class HomeScreen extends React.Component {
         <Image source={require('../../img/HelpingHandsLogo.png')} 
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
         <View style={styles.moduleContainerStyle}>          
-          <View style={styles.moduleButtonContainer}>
+          <View style={localStyles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>  
                 <TouchableOpacity onPress={() => this.props.navigation.push('LearnMenu', {
@@ -96,7 +96,7 @@ export default class HomeScreen extends React.Component {
           })}
           ><Text style={styles.moduleButtonText}>Learn</Text></TouchableOpacity>      
           </View>
-          <View style={styles.moduleButtonContainer}>
+          <View style={localStyles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
               <View style={styles.InnerCircleShapeView}>  
                 <TouchableOpacity onPress={() => this.props.navigation.push('TestMenu', {
@@ -155,5 +155,11 @@ const localStyles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: '#fff',
     marginLeft: -1,
+  },  
+  moduleButtonContainer: {
+    margin: 30,
+    marginTop: 15,
+    alignItems: "center",
+//    justifyContent: "center",
   },  
 });

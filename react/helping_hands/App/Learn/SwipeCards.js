@@ -71,7 +71,7 @@ class NoMoreCards extends Component {
   // Alert.alert('no more cards!!!!');
   render() {
     return (
-      <View>
+      <View style={styles.noMoreCardsStyle}>
         <Text style={styles.noMoreCardsText}>No more cards in this module!</Text>
         <Text style={styles.noMoreCardsText}>Learned: {global.learned.toString()}</Text>
         <Text style={styles.noMoreCardsText}>Not learned: {global.not_learned.toString()}</Text>
@@ -154,6 +154,7 @@ export default class extends React.Component {
     // stack={true}
     return (
       <SwipeCards
+        style={this.swipeCardsStyle}
         cards={this.state.cards}
         renderCard={(cardData) => <Card {...cardData} />}        
         renderNoMoreCards={() => <NoMoreCards />}
@@ -167,13 +168,19 @@ export default class extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  swipeCardsStyle: {
+    position: 'relative',
+    top: 25,
+  },
   card: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 300,
     height: 300,
     position: 'relative',
-    top: -80,
+    top: 30,
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    //overflow: 'hidden',
   },
   thumbnail: {
     width: 300,
@@ -183,6 +190,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingTop: 10,
     paddingBottom: 10
+  },
+  noMoreCardsStyle: {
+    position: 'relative',
+    top: 40,
   },
   noMoreCardsText: {
     fontSize: 22,
