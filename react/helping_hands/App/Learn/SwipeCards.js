@@ -6,7 +6,6 @@ import {StyleSheet, Text, View, Image, Alert} from 'react-native';
 
 import SwipeCards from 'react-native-swipe-cards';
 
-
 import images from "../../img"
 
 /*

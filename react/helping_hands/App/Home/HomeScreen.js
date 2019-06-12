@@ -22,62 +22,7 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = { isLoading: true}
     this.state.deviceID = DeviceInfo.getUniqueID();
-    console.log(this.state.deviceID);
   }
-
-  init_firebase() {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/learning_manage', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        init_gcloud: true,        
-        get_cards: false,
-        update_knowledge: false,
-        type: "alphabet",
-        username: DeviceInfo.getUniqueID(),
-        results: [0,0,0],
-      }),
-    })
-      // .then((response) => response.json())
-      // .then((responseJson) => {
-      //   global.new_cards_lm = responseJson.cards;
-      //   console.log(global.new_cards_lm);
-        
-      // })
-      // .catch((error) =>{
-      //   console.error(error);
-      // });
-  }
-
-  test_google_cloud() {
-    fetch('https://us-central1-helping-hands-cs194.cloudfunctions.net/test10', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        image_url: "30604346-b28f-4c64-bb1f-64548f16f96f",
-        token: "x83ff2d78-5bab-4e39-8908-174536f613de",
-      }),
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          dataSource: responseJson.sign,
-        }, function(){
-
-        });
-
-      })
-      .catch((error) =>{
-        console.error(error);
-      });
-  }
-
 
   /*
    * function: update_cards()
@@ -117,8 +62,11 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    // this.init_firebase();    
     this.update_cards();
+  }
+
+  componentWillUnmount() {
+    // if (this.state.waitedUpdate) this.state.waitedUpdate.cancel();
   }
 
   render() {
@@ -127,22 +75,6 @@ export default class HomeScreen extends React.Component {
         <Text>{this.state.dataSource}</Text>
         <Image source={require('../../img/HelpingHandsLogo.png')} 
                style={{flex:0.4, width:300, height:300, resizeMode: 'contain'}}/>
-        {/*<Button
-          containerStyle={styles.button}
-           title="Learn"
-
-          onPress={() => this.props.navigation.push('LearnMenu', {
-            type: 'Learn',
-          })}
-        />
-
-        <Button
-          containerStyle={styles.button}
-          title="Test"
-          onPress={() => this.props.navigation.push('TestMenu', {
-            type: 'Test',
-          })}
-        />*/}
         <View style={styles.moduleContainerStyle}>          
           <View style={styles.moduleButtonContainer}>
             <View style={styles.CircleShapeView}>
@@ -151,7 +83,7 @@ export default class HomeScreen extends React.Component {
                 type: 'LearnMenu',
               })}>
                   <Image
-                    style={styles.moduleButton}
+                    style={styles.moduleButton, localStyles.learnStyle}
                     source={require('../../img/learn.png')}
                   />
                 </TouchableOpacity>
@@ -171,7 +103,7 @@ export default class HomeScreen extends React.Component {
                   type: 'TestMenu',
                 })}>
                   <Image
-                    style={styles.moduleButton}
+                    style={styles.moduleButton, localStyles.testStyle}
                     source={require('../../img/test.png')}
                   />
                 </TouchableOpacity>
@@ -206,3 +138,22 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  learnStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -4,
+  },
+  testStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginLeft: -1,
+  },  
+});
