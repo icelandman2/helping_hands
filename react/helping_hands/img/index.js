@@ -25,5 +25,14 @@ const images = {
   x: require("./alphabet_signs/x.png"),
   y: require("./alphabet_signs/y.png"),
   z: require("./alphabet_signs/z.png"),
+  '01': require("./numbers_signs/1.png"),
+  '2': require("./numbers_signs/2.png"),
+  '3': require("./numbers_signs/3.png"),
+  '4': require("./numbers_signs/4.png"),
+  '5': require("./numbers_signs/5.png"),
+  '6': require("./numbers_signs/6.png"),
+  '7': require("./numbers_signs/7.png"),
+  '8': require("./numbers_signs/8.png"),
+  '9': require("./numbers_signs/9.png")
 }
 export default images;
