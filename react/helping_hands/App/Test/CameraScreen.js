@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
+import { ActivityIndicator, AppRegistry, TouchableHighlight, View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from "react-native";
 import { Button } from 'react-native-elements';
 import firebase from '../../config/firebase';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -23,6 +23,7 @@ constructor(props) {
     this.state = 
     {
       prediction: "default",
+      loading: false,
     };
   }
 
@@ -37,13 +38,19 @@ constructor(props) {
    */
 
   takePicture = async function() {
+      // this.state.loading = true;
+      this.setState({loading: true});
+      console.log("true!");
+    
     var nav = this.props.navigation;
+    
 
     //we need to be able to find the camera for our image-mediated verification
     //that the student has learned the sign to work
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
+
       console.log("data URI: " + data.uri);
 
       //This blob posts an image to firebase, receiving the URL that the image file
@@ -141,6 +148,14 @@ constructor(props) {
    */
 
   render() {
+    const isLoading = this.state.loading;
+
+    let loadingIcon;
+    if (isLoading) {
+      loadingIcon = <ActivityIndicator size="small" color="#2089dc"/>;
+    } else {
+      loadingIcon = <Text style={{ fontSize: 16 }}> SNAP</Text>;
+    }
     return (
       <View style={styles.container}>
             <RNCamera
@@ -169,7 +184,8 @@ constructor(props) {
 
         <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-            <Text style={{ fontSize: 14 }}> SNAP </Text>
+            
+            {loadingIcon}
           </TouchableOpacity>
         </View>
       </View>
