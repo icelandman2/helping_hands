@@ -36,6 +36,7 @@ export default class LearnScreen extends React.Component {
   animate() {
     let progress = 0;
     this.setState({ progress });
+    if (!this._isMounted) return;
     setTimeout(() => {
       this.setState({ indeterminate: false });
       setInterval(() => {

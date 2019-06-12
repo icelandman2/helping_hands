@@ -21,8 +21,16 @@ export default class TestMenuScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.state.deviceID = DeviceInfo.getUniqueID();
-    // console.log(this.state.deviceID);
+    this._isMounted = false;
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    // this._isMounted && this.getImage(this.props.item.image);    
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   /*
    * function: pressAlphabet
@@ -31,8 +39,12 @@ export default class TestMenuScreen extends React.Component {
    * initializes global state variables to be the relevant letters to practice signing
    * according to the learning manager
    */
-  pressAlphabet= async function() {
-    await this.update_cards('alphabet');            
+  pressAlphabet = async function() {
+    let alphabetUri = await this.update_cards('alphabet'); 
+    this._isMounted && this.setState({
+        uri: { alphabetUri },
+        ready: true
+    });          
     this.props.navigation.push('Test', {
       sectionName: 'Alphabet',
       type: 'Test'
@@ -54,12 +66,16 @@ export default class TestMenuScreen extends React.Component {
    * initializes global state variables to be the relevant words to practice signing
    * according to the learning manager
    */
-  pressEtiquette= async function() {
+  pressEtiquette = async function() {
+    let etiquetteUri = await this.update_cards('etiquette');
+    this._isMounted && this.setState({
+        uri: { etiquetteUri },
+        ready: true
+    });    
     this.props.navigation.push('Test', {
-              sectionName: 'Etiquette',
-              type: 'Test'
-            });
-    global.cards_left = ['hello', 'thanks', 'bye'];
+      sectionName: 'Etiquette',
+      type: 'Test'
+    });
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
     global.current_sign = global.cards_left[0];
@@ -76,23 +92,22 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    
-    console.log("we are about to call update_cards(numbers)");
-    await this.update_cards('numbers');        
-    console.log("we JUST CALLED update_cards(numbers)");
-    console.log("we are about to set global.cards_left");        
+    let numbersUri = await this.update_cards('numbers');  
+    this._isMounted && this.setState({
+        uri: { numbersUri },
+        ready: true
+    });        
+    this.props.navigation.push('Test', {
+      sectionName: 'Numbers',
+      type: 'Test'
+    });        
     global.cards_left = global.new_cards_lm;                
-    console.log("we JUST SET global.cards_left", global.cards_left);        
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
     global.current_sign = global.cards_left[0];
     global.learned = [];
     global.not_learned = [];
-    global.maybe_learned = [];
-    this.props.navigation.push('Test', {
-      sectionName: 'Numbers',
-      type: 'Test'
-    });    
+    global.maybe_learned = [];   
   };
 
   /*
@@ -148,7 +163,7 @@ export default class TestMenuScreen extends React.Component {
                   this.pressAlphabet.bind(this)
                 }>
                   <Image
-                    style={styles.moduleButton}
+                    style={localStyles.alphabetStyle}
                     source={require('../../img/alphabet_signs/a.png')}
                   />
                 </TouchableOpacity>
@@ -195,7 +210,6 @@ export default class TestMenuScreen extends React.Component {
           </View>         
         </View>
         <View style={styles.bottomContainerStyle}>
-
           <Button
             containerStyle={styles.checkButton}
             title="Main Menu"
@@ -206,3 +220,15 @@ export default class TestMenuScreen extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  alphabetStyle: {
+    width: 58,
+    height: 58,
+    borderRadius: 15,
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    marginRight: -5,
+    marginTop: 3,
+  } 
+});
