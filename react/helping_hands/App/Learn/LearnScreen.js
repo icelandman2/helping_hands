@@ -30,7 +30,9 @@ export default class LearnScreen extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.animate();
+
   }
 
   animate() {

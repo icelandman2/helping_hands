@@ -41,6 +41,7 @@ export default class TestMenuScreen extends React.Component {
    */
   pressAlphabet = async function() {
     let alphabetUri = await this.update_cards('alphabet'); 
+    global.curr_cards = 0;    
     this._isMounted && this.setState({
         uri: { alphabetUri },
         ready: true
@@ -68,6 +69,7 @@ export default class TestMenuScreen extends React.Component {
    */
   pressEtiquette = async function() {
     let etiquetteUri = await this.update_cards('etiquette');
+    global.curr_cards = 0;        
     this._isMounted && this.setState({
         uri: { etiquetteUri },
         ready: true
@@ -76,7 +78,6 @@ export default class TestMenuScreen extends React.Component {
       sectionName: 'Etiquette',
       type: 'Test'
     });
-    global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
     global.current_sign = global.cards_left[0];
     global.learned = [];
@@ -92,7 +93,8 @@ export default class TestMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    let numbersUri = await this.update_cards('numbers');  
+    let numbersUri = await this.update_cards('numbers'); 
+    global.curr_cards = 0;     
     this._isMounted && this.setState({
         uri: { numbersUri },
         ready: true

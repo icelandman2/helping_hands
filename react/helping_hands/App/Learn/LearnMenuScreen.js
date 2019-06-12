@@ -19,6 +19,14 @@ export default class LearnMenuScreen extends React.Component {
   constructor(props) {
     super(props);
   }  
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   /*
    * function: pressAlphabet
    * ------------------------------------------------------
@@ -27,7 +35,11 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */  
   pressAlphabet = async function() {
-    await this.update_cards('alphabet');    
+  let alphabetUri = await this.update_cards('alpabet'); 
+    this._isMounted && this.setState({
+        uri: { alphabetUri },
+        ready: true
+    });   
     global.cards_left = global.new_cards_lm;
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
@@ -49,7 +61,11 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressEtiquette = async function() {
-    await this.update_cards('etiquette');        
+    let etiquetteUri = await this.update_cards('etiquette'); 
+    this._isMounted && this.setState({
+        uri: { etiquetteUri },
+        ready: true
+    });   
     global.cards_left = global.new_cards_lm;            
     global.curr_cards = 0;
     global.total_cards = global.cards_left.length;
@@ -70,13 +86,17 @@ export default class LearnMenuScreen extends React.Component {
    * according to the learning manager
    */
   pressNumbers = async function() {
-    await this.update_cards('numbers');    
+    let numbersUri = await this.update_cards('numbers'); 
+    this._isMounted && this.setState({
+        uri: { numbersUri },
+        ready: true
+    });        
     global.cards_left = global.new_cards_lm;        
     global.curr_cards = 0;
     global.total_cards = global.new_cards_lm.length;
     global.learned = [];
     global.not_learned = [];
-    global.maybe_learned = [];
+    global.maybe_learned = [];   
     this.props.navigation.push('Learn', {
       sectionName: 'Numbers',
       type: 'Learn'
