@@ -4,6 +4,9 @@ from matplotlib.image import imread
 from os import listdir
 from os.path import isfile, join
 
+## Function: generate_new_data ##
+# Given path that contains all data, split into train/dev/test, loops through
+# each subdirectory and calls skin_change on every image file.
 def generate_new_data(data_path):
     data_folder = [direc for direc in listdir(data_path) if direc[0] is not '.']
     for f in data_folder:
@@ -19,13 +22,14 @@ def generate_new_data(data_path):
                 new_path = curr_path[0:len(curr_path)-4] + "_mod.jpg"
                 cv2.imwrite(signing, new_img)
 
+## Function: skin_change ##
+# Reads in image from given file path, identifies possible area of skin in photo,
+# and scales its HSV information by a constant defined here. The new image returned
+# only returns the detected skin regions darker.
 def skin_change(path):
     # read image and convert to HSV pixels
     frame = imread(path)[:,:,::-1] 
     converted = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    # cv2.imshow("images", converted)
-    # cv2.waitKey(0)
 
     # create skin mask using rough lower and upper bound on HSV scale for skin color
     lower = np.array([0, 48, 20], dtype = 'uint8')
@@ -33,7 +37,7 @@ def skin_change(path):
     skinMask = cv2.inRange(converted, lower, upper) # 200x200
 
     # add HSV values by constants to try to darken skin
-    h_const = 0#10
+    h_const = 0
     s_const = 40
     v_const = -50
     for i in range(len(converted)):
@@ -45,16 +49,7 @@ def skin_change(path):
                 curr_pixel[2] = max(0, min(200, curr_pixel[2] + v_const))
 
     converted = cv2.cvtColor(converted, cv2.COLOR_HSV2BGR)
-
-    # show the skin in the image along with the mask
-    # cv2.imshow("images", np.hstack([frame, converted]))
-    # cv2.waitKey(0)
-
     return(converted)
 
 data_path = '../../data'
 generate_new_data(data_path)
-
-# curr_path = '../../data/train/A/185.jpg'
-# test = skin_change(curr_path)
-# cv2.imwrite('../../data/train/A/185_mod.jpg', test)
