@@ -1,4 +1,5 @@
 
 react/helping_hands/config/environment.js
 *.pkl
-*.picklereact/helping_hands/config/firebase.js
+*.pickle
+react/helping_hands/config/firebase.js
